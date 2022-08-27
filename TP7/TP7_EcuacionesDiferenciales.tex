@@ -1,0 +1,301 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsfonts,amsthm,amssymb,latexsym}%,stmaryrd}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage[a4paper]{geometry}
+\usepackage[latin1]{inputenc}
+%\usepackage{subfigure}
+\usepackage{float}
+%\usepackage{fancyhdr}
+%\usepackage{enumitem}
+\usepackage{textcomp}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\begin{center}
+
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 7: Ecuaciones Diferenciales }}\\
+\rule{17cm}{1pt}
+\bigskip
+\end{center}
+\medskip
+
+\section*{Ecuaciones diferenciales ordinarias: problema de valor inicial.}
+
+\noindent{\bf Ej.1} \\ 
+Dado el siguiente Problema de Valor Inicial (PVI)
+
+$$\left\{ \begin{array}{l}
+y'= -y+x+1 \\
+y(0)=1  \\
+\end{array}
+\right. $$
+
+\begin{itemize}
+ 
+\item[a)] Realice funciones en Matlab/Octave que permita calcular la solución en el intervalo [0,1] implementando los métodos de Euler simple, Euler modificado y Runge-Kutta de cuarto orden para los pasos $h=0.05$; $h=0.025$ y $h=0.0125$.
+ 
+\textbf{Notas:} Para obtener funciones que puedan ser utilizadas en todos los ejercicios considere:
+\begin{itemize}
+
+\item Definir en el programa principal los límites de integración y el paso de cálculo de forma de poder cambiarlos fácilmente.
+
+\item Emplear funciones anónimas definidas en el programa principal para la función que se desea integrar. Notar que la función a integrar escrita de forma general depende de dos variables.
+
+\item Utilizar como argumentos de entrada de las funciones a implementar (Euler simple, Euler modificado y Runge-Kutta) los límites de integración, el paso de cálculo, la función anónima y el valor inicial.
+
+\end{itemize} 
+  
+\item[b)]Calcular el error absoluto en cada caso comparando con la solución exacta:  $y(x)= x + e^{-x}$ . Graficar 
+superponiendo las distintas soluciones.
+
+\item[c)] Interpretar la relación entre el paso utilizado y el error absoluto. 
+
+\end{itemize}
+
+\medskip
+
+\noindent{\bf Ej.2} \\ 
+Dada la ecuación  $y'= sen(x)$ en el intervalo $[0 : 8]$ con el valor inicial  $y(x_0)=y_0=1$, adoptar un paso $h$ y resolver con los distintos métodos de paso simple estudiados. Armar una tabla donde se puedan comparar los resultados y errores. Graficar las soluciones. La soluci\'on exacta del problema es $y = 2 - cos(x)$.\par 
+\medskip
+
+\noindent{\bf Ej.3} \\ 
+Considere el problema de valor inicial
+\begin{equation}
+y'= y - x^{2} +1, \quad 0 \leq x \leq 2, \quad y(0)= 0.5 \nonumber
+\end{equation}
+Compare las soluciones del m\'etodo de Euler con $h = 0.025$, el m\'etodo de Euler modificado con $h = 0.05$ y el m\'etodo de Runge-Kutta de cuarto orden con $h = 0.1$ en los puntos de red 0.1, 0.2, 0,3, 0.4 y 0.5. La soluci\'on exacta del problema es $y(x) = 1 + x^{2} +2x -  \frac{1}{2}e^{x}$.\par
+
+\medskip
+
+\noindent{\bf Ej.4} \\ 
+La altura $h(t)$ del agua en un tanque cil\'indrico vertical que se vacía por un orificio ubicado en la base puede calcularse según la siguiente ecuación diferencial:
+
+$$\frac{dh(t)}{dt}=-k \, \sqrt{h(t)}$$
+
+\noindent donde $k$ es el coeficiente que depende de la forma del orificio y de las secciones transversales del tanque y del orificio.\par 
+
+\begin{figure}[H]
+\includegraphics[width= 0.2 \textwidth ]{tanque_cilindrico.pdf}
+\centering
+\label{tanque}
+\end{figure}
+
+
+Si $h(t)$ se mide en metros, el tiempo $t$ se mide en minutos y si inicialmente el tanque tiene agua hasta una altura $h_o= 3$~m, calcular la altura del agua en el tanque luego de trascurridos 15 min considerando $\Delta t=0,5$ min y utilizando un m\'etodo de segundo orden. ¿Al cabo de cuanto tiempo se vacía completamente?. Considere $k=0,06$.
+
+
+\section*{Ecuaciones diferenciales ordinarias: sistemas de ecuaciones de primer orden.}
+
+\noindent{\bf Ej.5} \\ 
+Sea el sistema de dos ecuaciones lineales:
+\begin{equation*}
+\frac{dy_{1}}{dx} = -0.5 y_{1} \qquad
+\frac{dy_{2}}{dx} = 4 -0.3y_{2} -0.1y_{1} 
+\end{equation*}
+
+\noindent con condiciones iniciales $y_{1}= 4$ e $y_{2}= 6$ en $x = 0$. Integre en el intervalo [0:10] con paso $h= 0.5$. Para ello aplique los m\'etodos de Euler simple y de Runge Kutta de cuarto orden. Con la informaci\'on proporcionada, ?`en qu\'e resultados confiar\'ia m\'as? ?`Por qu\'e?\\
+
+Nota: el procedimiento para resolver un sistema de ecuaciones consiste en aplicar la t\'ecnica simple por ecuaci\'on en cada paso antes de proceder con el siguiente.\\
+
+\noindent{\bf Ej.6} \\ 
+Dado un resorte con una constante de rigidez $k$ = 200 KN/m, que sostiene una masa $m$ de 20 kg. Hallar las funciones del desplazamiento y la velocidad que describen el movimiento en función del tiempo cuando el desplazamiento inicial es $u_0$ = 0.02 m y el sistema no posee amortiguamiento. La ecuación diferencial que describe el problema es $m \, u''(t) + k \, u(t) =0 $, donde $u(t)$ representa el desplazamiento. Considere la velocidad inicial nula. Comparar con la soluci\'on exacta. Graficar ambas soluciones. 
+
+\medskip
+
+\noindent{\bf Ej.7} \\ 
+Un péndulo de masa $m$ = 30 kg, con una cuerda de longitud $L$ = 3 m. se aparta un ángulo inicial de 0.1 radianes. 
+
+\begin{itemize}
+
+\item[a)] Plantear la ecuación que representa el movimiento del objeto y trazar una curva representando el ángulo de apertura en el tiempo. Suponer que no hay disipación de energía. 
+
+\item[b)] Analizar el caso del problema anterior pero considerando un amortiguamiento proporcional a la velocidad con el factor c= 3 N/m/s. 
+\end{itemize}
+
+Ayuda: los libros Chapra y/o Burden pueden serle de utilidad.
+\medskip
+
+\section*{Ecuaciones diferenciales ordinarias: problemas de valores de contorno.}
+
+\noindent{\bf Ej.8} \\
+Implemente mediante una funci\'on el m\'etodo de diferencias finitas.
+
+\medskip
+
+\noindent{\bf Ej.9} \\ 
+Hallar la solución de $y''-y=x$ con las condiciones de borde $y(0)= -2$ ; $y(1)=1$. Adoptar $h=0.2$. Graficar la soluci\'on.
+
+\medskip
+
+\noindent{\bf Ej.10} \\ 
+Hallar la soluci\'on de $y''-2y'+y=2e^x$ con las condiciones de borde $y(0)-2y'(0)= 3$ ; $y(1)+y'(1)=6 \, e$. Adoptar $h=0.2$. Graficar la soluci\'on.
+
+\medskip
+
+\noindent{\bf Ej.11: Ejercicio adicional.} \\ 
+Una barra de acero simplemente apoyada en sus dos extremos tiene una secci\'on constante rectangular de ancho 2 cm y altura 4 cm. La barra tiene 120 cm de largo y una carga puntual en el centro de 100 N. Como se muestra en la figura \ref{barra_apoyada}.
+
+\begin{figure}[H]
+\includegraphics[width= 0.6 \textwidth ]{Barra_apoyada.pdf}
+\centering
+\caption{}
+\label{barra_apoyada}
+\end{figure}
+
+La ecuaci\'on diferencial que representa la deformaci\'on el\'astica es:
+$$ y''(x)=-\frac{M(x)}{EJ}$$
+
+
+Donde:
+\begin{itemize}
+
+ \item $M(x)$ es el momento flector 
+
+	 $$M(x)= \left\{ \begin{array}{l}
+	\displaystyle \frac{P}{2} \, x \qquad \qquad \; \; 0 \leq x \leq \frac{L}{2}  \\
+	\\
+	\displaystyle \frac{P}{2} \, (L-x) \qquad \frac{L}{2} \leq x \leq L \\
+	\end{array}
+	\right. $$
+ \item $E$ es el m\'odulo de elasticidad 
+ \item $J$ es el momento de inercia.
+
+\end{itemize}
+\begin{itemize}
+
+
+\item[a)] Hallar la deformaci\'on de la barra adoptando un paso $h$ y suponiendo que es nula en los extremos. Expresar la ecuaci\'on en t\'erminos de E y J. Graficar la soluci\'on y compararla con la soluci\'on exacta en el punto central igual a 
+$$y\left(x=\frac{L}{2}\right)=\frac{P \, L^3}{48 \, EJ}$$
+
+\item[b)] Hallar la deformaci\'on de la barra suponiendo la misma carga distribuida uniformemente a lo largo de la barra. Comparar las soluciones. 
+\end{itemize}
+
+
+
+
+%Considere el problema de valor inicial $y'(x)=\frac{x+y}{y-x}$ con $y(0)=1$.
+%\begin{itemize}
+% \item[{\bf a)}] Obtenga una aproximación de $y(1.1)$ considerando el método de Euler y un paso $h=0.275$. Calcule el error cometido sabiendo que la solución analítica viene dada por $y_a(x)=x+\sqrt{1+2x^2}$.
+% \item[{\bf b)}] Idem Ej.1 a) pero considerando el método de Euler mejorado. 
+% \item[{\bf c)}] Implemente el algoritmo del método de Euler mejorado en OCTAVE/MATLAB y vuelva a estimar el valor $y(1.1)$ y el error cometido para un paso $h=0.01$.
+%\end{itemize}
+%\medskip
+%
+%\noindent{\bf Ej.2. Errores:}\\
+%
+%En el libro de Burden-Faires (p. 245 de la 5ta Ed.) se muestra una generalización de la cota del error absoluto cometido por el método de Euler considerando tanto los errores de truncamiento como los de redondeo. Si se considera el problema de valor inicial $y'(x)=f(x,y(x))$ con $y(x_0)=y_0$, dicha cota vendrá dada por
+%\begin{eqnarray}
+%|E|=|y(x_i) - y_i|\leq\frac{1}{L}E(h)(e^{L(x_i-x_0)}-1)+|\delta|e^{L(x_i-x_0)},\nonumber
+%\end{eqnarray}
+%donde $L$ es la constante de Lipschitz, $E(h)=\frac{hM}{2}+\frac{\delta}{h}$, con $|y''(x)|\leq M$, y $\delta$ es una cota superior del error de redondeo ($\delta=0.5\times 10^{-n}$ para $n$ cifras significativas exactas, ¿por qué?).
+%\begin{itemize}
+% \item[{\bf a)}] Calcule el paso óptimo que permite minimizar dicha cota.
+% \item[{\bf b)}] Calcule la cota del error considerando {\bf (a)}, $f(x,y(x))=-y(x) + 1$ e $y(0)=0$. Obtenga $y(0.3)$ considerando $h=0.1$, $h=0.05$ y el valor óptimo. Utilice 3 cifras significativas exactas. Compare los resultados.
+%\end{itemize}
+%\medskip
+%
+%
+%\noindent{\bf Ej.3}\\ 
+%
+%Considere un circuito RC cuya señal de entrada, $v_e(t)$, es la función escalón unitaria y se toma como salida la tensión sobre el capacitor, $v_c(t)$, el que se encuentra inicialmente descargado.
+%\begin{itemize}
+% \item[{\bf a)}] Muestre que la ecuación diferencial que describe el circuito está dada por $v_c'(t) = \dfrac{v_e(t)}{RC}-\dfrac{v_c(t)}{RC}$.
+%\item[{\bf b)}] Obtenga la solución analítica $v_c(t)$ para las condiciones propuestas.
+%\item[{\bf c)}] Utilizando el método de Euler, para $R$ = 1, $C=10^{-3}$ y $h=RC/10$,
+% \begin{itemize}
+% \item[{\bf i)}] Calcule los 5 primeros valores aproximados de la solución $v_c(t)$ a partir de $t_0 = 0s$.
+% \item[{\bf ii)}] Aproxime $v_c(t)$ para 0s $\leq t \leq 5RC$. Grafique el resultado.
+% \item[{\bf iii)}] Evalúe y grafique el error absoluto cometido en la aproximación de $v_c(t)$.
+%\end{itemize}
+%\item[{\bf d)}] Repita el inciso c) con paso $h=RC/100$ y compare los resultados.
+%%\item[{\bf e)}] Repita el inciso c) empleando el método de Taylor de orden 2 y compare los resultados.
+%\item[{\bf e)}] Repita el inciso c) utilizando el método de Runge-Kutta de orden 2 y 4 y compare los resultados.
+%\end{itemize}
+%\medskip
+%
+%%\noindent{\bf Ej.3:} Considere el circuito de la figura, para el cual las compuertas cambian de estado al tiempo $t_0=0~s$, después de estar en la posición mostrada durante un tiempo considerable.
+%%
+%%\vspace{-0.8cm}
+%%\begin{minipage}{11.4cm}
+%%\begin{itemize}
+%%\item[{\bf a)}] Obtenga de forma numérica, el valor de la corriente en instantes de tiempo equiespaciados en $1~ms$ desde $t_0=0~s$ hasta $t_f=50~ms$ considerando los esquemas de resolución desarrollados en los incisos {\bf a)}, {\bf b)} y {\bf c)} del {\bf Ej. 2}. Interprete los resultados.
+%%\item[{\bf b)}] ¿Qué sucede al tomar un paso igual a la mitad del propuesto?
+%%\item[{\bf c)}] Halle la solución analítica y grafique el error de cada método en función del tiempo.
+%%\end{itemize}
+%%\end{minipage}
+%%\hspace{0.7cm}
+%%\begin{minipage}{4cm}
+%%	\vspace{1cm}
+%%	\begin{center}
+%%		\begin{figure}[H]
+%%			\epsfig{file=RL.eps, scale=4.5}
+%%			\label{grafico_1}
+%%		\end{figure}
+%%	\end{center}
+%%\end{minipage}
+%%\vspace{-1.4cm}
+%\noindent{\bf Ej.4. Sistemas:} 
+%\vspace{-1.cm}
+%Dado el circuito de la figura, se pretende obtener la tensión sobre el capacitor.
+%\begin{minipage}{11.4cm}
+%\begin{itemize}
+%\item[{\bf a)}] Halle la ecuación diferencial que describe el circuito. 
+%\item[{\bf b)}] ?` Es una ecuaci\'on lineal? ?` De qu\'e orden? Convierta dicha ecuación en un sistema de ecuaciones diferenciales de primer orden.
+%\item[{\bf c)}] Calcule numéricamente la tensión sobre el capacitor utilizando el método de Runge-Kutta de orden 2 con paso $h = 0, 1 s$ desde $t_0 = 0 s$ hasta $t_f = 8 s$.
+%\end{itemize}
+%\end{minipage}
+%\hspace{0.7cm}
+%\begin{minipage}{4cm}
+%	\vspace{1cm}
+%	\begin{center}
+%		\begin{figure}[H]
+%			\epsfig{file=RLC.eps, scale=4.5}
+%			\label{grafico_2}
+%		\end{figure}
+%	\end{center}
+%\end{minipage}
+%\medskip
+%
+%\noindent{\bf Ej 5}\\
+%
+%La función $y(x)$ cumple la siguiente ecuación diferencial: 
+%\begin{eqnarray}
+%y'''+8y=2x-5+8e^{-2x}\nonumber
+%\end{eqnarray}
+%Se quiere encontrar una estimación numérica de la función $y$ en $x=-0.3$, y de las derivadas de $y(x)$ en $x=-0.2$, para el caso particular en que $y(0)=-5,~y'(0)=3, ~y''(0)=-4$. Resuelva el problema planteado utilizando un método de orden $O(h^2)$. 
+%
+%
+%%\noindent{\bf Ej.7:} La ecuación diferencial que describe un dispositivo denominado lazo de enganche de fase está dada por
+%%\begin{center}
+%%$\psi''(t)=v(t)- K_1~\mathrm{cos}\left( \psi(t)\right) \psi'(t)-K_2~\mathrm{sen}\left( \psi(t)\right) $
+%%\end{center}
+%%siendo $K_1$ y $K_2$ constantes conocidas y $v(t)$ conocida.
+%%\begin{itemize}
+%%\item[{\bf a)}] Obtenga la solución $\psi(t)$ para $0s < t < 30ms$, considerando $K_1 = 1 × 10^3$, $K_2 = 6 × 10^5$ y $v(t)=2 \pi Au(t)$, donde $u(t)$ es el escalón unitario y $A=2 × 10^4$, utilizando el método de punto
+%%medio (Runge-Kutta de orden 2) con paso $h = 10^{-7}$, considerando $\psi(0)=0$ y $\psi'(0)=0$.
+%%\item[{\bf b)}] Repita el ejercicio del inciso anterior para $A=9 × 10^4$.
+%%\end{itemize}
+%%En ocasiones, para simplificar el problema, se realiza una linealización de la ecuación, resultando
+%%\begin{center}
+%%$\psi''(t)=v(t)-K_1~\psi'(t)-K_2~\psi(t)$
+%%\end{center}
+%%\begin{itemize}
+%%\item[{\bf c)}] Halle la solución a esta última ecuación utilizando los valores de los parámetros de los incisos {\bf a)} y {\bf b)}.
+%%\item[{\bf d)}] Compare las soluciones de la ecuación diferencial no-lineal con las de la lineal para los valores de $A$ sugeridos.
+%%\end{itemize}
+%
+%%{\bf Ej.2: Mejorando a Euler}\\[5pt]
+%%Considere la representación integral para la resolución del problema de valor inicial.
+%%\begin{itemize}
+%% \item[{\bf a)}] Obtenga un esquema de resolución basado en el método de los trapecios. ¿Se trata de un método implícito o explícito? ¿De qué orden es?
+%% \item[{\bf b)}] Calcule la región de estabilidad absoluta para la resolución de un problema rígido. ¿Es un método A-estable?
+%% \item[{\bf c)}] Modifique, utilizando el método de Euler, lo obtenido en el inciso {\bf (a)} para lograr un método de trapecios implícito (conocido como método de \emph{Euler mejorado}). Calcule la región de estabilidad absoluta para un problema rígido. ¿Es A-estable?
+%% \item[{\bf d)}] Ídem al inciso {\bf (a)} considerando el método de Simpson.
+%%\end{itemize}
+\end{document}

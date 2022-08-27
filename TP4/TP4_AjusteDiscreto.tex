@@ -1,0 +1,89 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[a4paper]{geometry}
+\usepackage{subfigure}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 4: Ajuste}}\\
+\rule{17cm}{1pt}
+
+\bigskip
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Ej. 1:} Con los datos de la siguiente tabla ajuste los valores por el método de mínimos cuadrados a
+una función: a) lineal, b)polinómica de $2$ grado, c) potencial y d) exponencial. Evalúe el error cuadrático medio en cada caso.
+
+\begin{table}[ht]
+\begin{tabular}{|c|c|c|c|c|c|}\hline
+
+X & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 \\ \hline
+Y & 2 & 2.9  & 5 & 6.7 & 12 \\ \hline
+\end{tabular}
+\centering
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+{\bf Ej. 2:} Dada la siguiente tabla de datos obtenga las funciones de ajuste utilizando el m\'etodo de m\'inimos cuadrados, considerando polinomios de grado 1, 2 y 3. Utilizando OCTAVE/MATLAB grafique los datos de la tabla y los polinomios de ajuste.
+\begin{table}[ht]
+\begin{tabular}[c]{|c|c|c|c|c|c|c|}
+\hline
+$x$ & -1 & -0.5 & 2 & 2.25 & 4 & 5 \\
+\hline
+$f(x)$ & 9.1 & 6 & -3.5 & -3.3 & -0.9 & 2.5 \\
+\hline
+\end{tabular}
+\centering
+\end{table}
+
+\textquestiondown Qu\'e ajuste le parece que representa mejor los datos? ¿Qu\'e par\'ametro utilizar\'ia como indicador de la calidad del ajuste? \textquestiondown Cu\'al elegiría para manipular algebraicamente? ¿Tendrá sentido seguir aumentando el orden del polinomio de ajuste?
+
+
+{\bf Ej. 3:}
+\begin{itemize}
+ \item[{\bf a)}] Suponga que se cuenta con un conjunto de $m+1$ datos. Use la función \textbf{help} de OCTAVE/MATLAB para entender la forma en que opera la función \textbf{polyfit} .
+
+\item[{\bf b)}] Utilice la función \textbf{polyfit}  con el conjunto de datos del \textbf{Ej. 1} para $n=1,2,3$ y compare con lo obtenido previamente. ¿Qué pasa si el grado del polinomio es igual a $m$? Describa la salida de la funci\'on \textbf{polyfit}  para esos casos.
+
+\item[{\bf c)}] Basado en el método de mínimos cuadrados, busque una transformación que linealice el problema y explique cómo realizar un ajuste de datos considerando la función $f(t)= \frac{at}{b+t}$. Para corroborar, genere datos y ajuste los valores de $a$ y $b$
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\bf Ej. 4:} Los datos de un ensayo de una barra de acero se presentan en la tabla. Se trata de ajustar una curva representativa, por el método de mínimos cuadrados, de la relación carga-alargamiento $(P-\Delta L)$. Grafique los puntos y adopte una o más curvas para el ajuste. Grafique posteriormente las curvas obtenidas superpuesta a los puntos. ¿Qué alargamiento ocurrirá en la barra si se aplica una carga de siete toneladas?
+
+\begin{table}[h]
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|} \hline
+$\Delta L \times 10^2$ & 0 & 3 & 6 & 9 & 12 & 15 & 20 & 20 & 25 & 30 & 35 & 40 & 45 \\ \hline
+P [kg] & 500 & 1900 & 3250 & 4300 & 5450 & 6600 & 8100 & 9000 & 9350 & 9500 & 9700 & 9850 & 10000 \\ \hline
+\end{tabular}
+\centering
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\bf Ej. 5: Ejercicio adicional:}
+\bigskip
+
+Se mide la transferencia entre tensión y corriente que ocurre en un circuito eléctrico. El conjunto de medidas se encuentra en el archivo adjunto \verb"tp2ej2.txt". ¿Cu\'ales son los datos obtenidos experimentalmente? ¿Cu\'al es el par\'ametro del circuito a estimar?
+\begin{itemize}
+ \item[{\bf a)}] Proponga una función de ajuste acorde al comportamiento que observa de los datos.
+ \item[{\bf b)}] Se pretende simplificar el comportamiento del  dispositivo no lineal para lo cual se ajustan los datos mediante un polinomio lineal. ¿Cuál es el valor de resistencia equivalente?  Recuerde que la resistencia es un dispositivo pasivo.
+ \item[{\bf c)}] ¿Puede afirmar que el error al estimar el valor de corriente para una determinada tensi\'on estar\'a por debajo de un cierto valor umbral? ¿Por qu\'e?
+\end{itemize}
+\medskip
+\end{document}

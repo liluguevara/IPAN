@@ -1,0 +1,823 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[a4paper]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{textcomp}
+\usepackage{framed}
+
+\usepackage{color}
+\usepackage{wrapfig}\definecolor{shadecolor}{RGB}{224,238,238}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\renewcommand{\labelitemi}{$\bullet$}
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 2: Programaci\'on en OCTAVE/MATLAB}}\\
+\rule{17cm}{1pt}
+\bigskip
+\end{center}
+
+Como lenguaje de programaci\'on vamos a utilizar Matlab/Octave. En estos lenguajes existen dos maneras de trabajar: de forma directa, ingresando comandos  por  la  l\'inea  de  comandos,  o  bien  generando  un script de  extensi\'on \textbf{.m} que se ejecuta desde la consola escribiendo el nombre del archivo sin la extensi\'on.  Un  script  es un  archivo de  texto  plano  que  contiene  una  serie  de  instrucciones  que  Matlab/Octave puede  interpretar y ejecutar. En general trabajaremos con un programa principal, guardado en un archivo \textbf{nombre-programa.m}, y en algunos casos también con subprogramas que consistir\'an de funciones que ser\'an llamadas por el programa principal.
+ 
+\subsection*{Variables}
+ 
+Respecto de los nombres de las variables, Matlab/Octave distingue entre may\'usculas y min\'usculas, es decir, la variable $'hola'$ es distinta de la variable $'HOLA'$, y a su vez de la variable $'Hola'$. Para asignar un valor a una variable se utiliza el operador igual (\textbf{=}). A una variable se le puede asignar un valor aislado o tambi\'en el resultado de una operaci\'on. Las variables pueden ser enteras, reales, complejas, de tipo carácter o variables l\'ogicas. 
+Matlab/Octave cuenta con variables predefinidas, esto es, nombres reservados con valores ya establecidos. Por ejemplo la variable $pi$ tiene asignado el valor $\pi$. Algunas variables predefinidas que veremos a menudos son $ans$, $Inf$, $NaN$. \par 
+Para Matlab/Octave todos los elementos son arreglos matriciales. En particular, los escalares son matrices de dimensi\'on 1~$\times$~1, los  vectores  fila  son  matrices  de  dimensi\'on 1~$\times$~n, y los vectores columna son matrices de dimensi\'on n~$\times$~1. Las matrices se declaran entre corchetes (\textbf{[$\thinspace$]}), las columnas se separan con espacios o con coma (\textbf{,}), y para indicar el comienzo de una nueva fila se utiliza el punto y coma (\textbf{;}).  \par
+Hay varias funciones que permiten construir matrices con valores particulares, como por ejemplo:
+\begin{center}
+\begin{tabular}{| c | c | }
+\hline
+funci\'on & operaci\'on  \\
+\hline
+\verb'eye(n)' & matriz identidad de dimensi\'on n \\
+\verb'zeros(n)' & matriz con elementos nulos cuadrada de dimensi\'on n \\
+\verb'zeros(n,m)' & matriz con elementos nulos de dimensi\'on n $\times$ m \\
+\verb'ones(n)' & matriz de unos cuadrada de dimensi\'on n \\
+\verb'ones(n,m)' & matriz de unos de dimensi\'on n $\times$ m \\
+\verb'diag(v, m)' & matriz cuadrada con los elementos del vector v en la diagonal m\\
+\hline  
+\end{tabular}
+\end{center}
+
+Muchas veces vamos a necesitar construir vectores fila que vayan de un valor inicial a un valor final con un paso constante. Dos formas simples de construir estos vectores son:
+\begin{itemize}
+\item especificando entre par\'entesis o corchetes el valor inicial, el paso y el valor final, donde si el paso no es especificado por defecto toma el valor 1: 
+\verb'x=[valor inicial:paso:valor final]'; 
+\item a partir de la funci\'on \verb'linspace: x=linspace(valor inicial,valor final,cantidad de puntos)'. 
+\end{itemize}
+\noindent La primera especifica el paso mientras que la segunda la cantidad de puntos a considerar dentro del intervalo. Como veremos en un ejemplo más adelante, ambas maneras no son necesariamente equivalentes y dependiendo de la situaci\'on convendr\'a utilizar una u otra. \par 
+
+A los elementos de una matriz se puede acceder mediante sus \'indices. A su vez, tambi\'en pueden ser asignados a una nueva variable, generando un subarreglo del arreglo original. Octave/Matlab considera como primer \'indice al valor 1, mientras que el \'ultimo valor estar\'a dado por la dimesi\'on, el cual tambi\'en se puede obtener mediante la palabra \verb'end'. Para acceder a un elemento particular de un vector se indica entre parentes\'is el \'indice correspondiente a dicho elemento. Luego, por ejemplo para un arreglo de dimensi\'on 1$\times$n, v(i) permite obtener el elemento de la columna i, donde 1~$\leq$~i~$\leq$\verb'end'. Para un subarreglo de mayor dimensi\'on, se especifica el rango a extraer separado por dos puntos (\textbf{:}), es decir, $v$(\textbf{inicio} : \textbf{fin}), donde 1 $\leq$ \textbf{inicio}~$\leq$~\textbf{fin} y \textbf{inicio}$\leq$~\textbf{fin}~$\leq$\verb'end'. De manera an\'aloga se procede con un vector columna o con una matriz, donde en este \'ultimo caso se necesita especificar dos \'indices (o dos rangos de \'indices) separados por coma, el primero para la(s) fila(s) y el segundo para la(s) columna(s). \par 
+
+Finalmente, si bien hay todo un universo de funciones definidas para arreglos, dos que valen la pena presentar dado que ser\'an muy utilizadas en este curso son \verb'length()', que devuelve la longitud (número de elementos) de un objeto, y  \verb'size()', que devuelve un vector fila con el tamaño (número de elementos) de cada dimensión del arreglo. \par 
+\hfill 
+
+Algunos ejemplos para probar desde la consola:
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.48cm}\= \kill
+\>$>>$ x0 = 1\\
+\> x0 = 1 \\
+\>$>>$ x1 = [1, 2]\\
+\> x1 = \\
+\> \> 1 2 \\
+\>$>>$ x2 = [1 2]\\
+\> x2 = \\
+\> \> 1 2 \\
+\> length(x2) \\
+ans = 2\\
+\>$>>$ x3 = [1; 2]\\
+\> x3 =\\
+\> \> 1 \\
+\> \> 2 \\
+\>$>>$ x3(1) \\
+\> ans = 1 \\
+\>$>>$ x3(2) \\
+\> ans = 2 \\
+\>$>>$ x3(end) \\
+\> ans = 2 \\
+\>$>>$ a = [1, 2, 3; 4, 5, 6; 7, 8, 9]\\
+\>  a =\\
+\> \> 1 2 3 \\
+\> \> 4 5 6 \\
+\> \> 7 8 9 \\
+\>$>>$ a(2, 1) \\
+\> ans = 4\\
+\>$>>$ a(3, 3) \\
+\> ans = 9 \\
+\>$>>$ a(end) \\
+\> ans = 9 
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.48cm}\= \kill
+\>$>>$ a(end, end) \\
+\> ans = 9 \\
+\>$>>$ length(a) \\
+\> ans = 3 \\
+\>$>>$ size(a)\\
+\> ans =  3 3 \\ 
+\> $>>$ aa = a(1:2,1) \\
+\> aa = \\
+\> \> 1 \\
+\> \> 4 \\
+\>$>>$ b = zeros(2, 3) \\
+\> b = \\
+\> \> 0 0 0 \\
+\> \> 0 0 0 \\ 
+\>$>>$ c = 3*ones(1,4) \\
+\> c = \\
+\> \> 3 3 3 3 \\
+\> $>>$ size(c) \\
+\> ans = \\
+\> \> 1 4 \\
+\>$>>$ d = [1:2:10] \\
+\> d = \\
+\> \> 1   3   5   7   9 \\
+\>$>>$ length(d) \\
+\> ans = 5 \\
+\>$>>$ e = linspace(1,10,5)\\
+\> e = \\
+\> \> 1.0000    3.2500    5.5000    7.7500   10.0000 \\
+\>$>>$ length(e) \\
+\> ans = 5 \\
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+
+\vspace{0.5 cm}
+A partir de la comparaci\'on de los vectores \textbf{d} y \textbf{e} podemos notar que no es exactamente lo mismo indicar el paso con el que se construye un vector que la cantidad de puntos. Si bien para este ejemplo la longitud de los vectores es la misma, podemos ver que en el primer caso Octave/Matlab incrementa el valor inicial con el paso indicado hasta llegar al valor final pero sin la necesidad de considerarlo, mientras que en el segundo caso, el paso es tal que permite respetar ir desde el valor inicial al final considerando la cantidad de puntos indicada. Si quisi\'eramos construir un vector indicando el paso y que tome el valor final, el paso no es necesariamente arbitrario, sino que se puede calcular a partir de la cantidad de puntos que se quiere obtener mediante \textbf{paso = (valor final - valor inicial)/(cantidad de puntos -1)}. De esta manera obtenemos el mismo resultado que con la funci\'on \verb'linspace'. Para chequearlo, calcule nuevamente \textbf{d} pero con paso = (10 - 1)/(5 - 1) = 2.25 \par    
+Como en Octave/Matlab todas las variables son arreglos, los mismos pueden ser utilizados para realizar operaciones vectoriales y matriciales o para realizar operaciones \textit{elemento a elemento}. Para distinguir una operaci\'on matricial de una elemento a elemento es necesario anteponer un '.' antes de los operadores sobrecargados \verb'*, ^, /,' y \verb'\'. Algunas de las operaciones que más vamos a utilizar son: \par 
+
+\begin{center}
+\begin{tabular}{| c | c | }
+\hline
+s\'imbolo & operaci\'on  \\
+\hline
+ \verb'+' & suma   \\ 
+ \verb'-' & resta  \\  
+ \verb'*' & producto \\
+\verb'.*' & producto elemento a elemento \\
+\verb'^' & exponenciaci\'on \\
+\verb'.^' & exponenciaci\'on elemento a elemento \\
+\verb'/' & divisi\'on \\
+\verb'./' & divisi\'on elemento a elemento \\
+\verb'\' & divisi\'on invertida \\
+\verb'.\' & divisi\'on invertida elemento a elemento \\
+\verb''' & operador transpuesta \\
+\hline  
+\end{tabular}
+\end{center}
+
+Más ejemplos para probar desde la consola, esta vez de operaciones matriciales y elemento a elemento. Trate de reproducirlos en la ventana de comandos, de entender qué operación se está realizando y comprender el resultado obtenido.
+
+\begin{minipage}[t]{0.55\textwidth}
+\begin{shaded}
+
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.48cm}\= \kill
+
+\>$>>$ a = [1 1 1]\\
+\> a =  \\
+\> \> 1 1 1 \\
+\\
+\> $>>$ b = a*a \\
+\scriptsize{error: operator *: nonconformant arguments} \\
+\> \>\scriptsize{(op1 is 1x3, op2 is 1x3)} \\
+\\
+\> $>>$b = a*a' \\
+\> b = 3\\
+\\
+\>$>>$ c = a.*a \\
+\> c =\\
+\> \> 1 1 1\\
+\\
+\> d = a.*a' \\
+\> d = \\
+\> \>   1   1   1 \\
+\> \>   1   1   1 \\
+\> \>    1   1   1 \\
+\> e = (2*a)$^{\wedge}$2 \\
+\scriptsize{error: for x$^{\wedge}$y, only square matrix arguments are permitted} \\
+\scriptsize{and one argument must be scalar.  Use .$^{\wedge}$ for elementwise power.}
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.43\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.48cm}\= \kill
+\\
+\> e = (2*diag(a))$^{\wedge}$2 \\
+\> e = \\
+Diagonal Matrix \\
+\> \>   4   0   0 \\
+\> \>   0   4   0 \\
+\> \>   0   0   4 \\
+\\
+\> $>>$ e = diag([1, 1], 1) + diag([3, 3], -1) + e \\
+\> e = \\
+\> \> 4   1   0 \\
+\> \>   3   4   1 \\
+\> \>   0   3   4 \\
+\\
+\> $>>$ f = e $\setminus$ a' \\
+\> \>    0.25000 \\
+\> \>    0.00000 \\
+\> \>    0.25000 \\
+\\
+\> $>>$ g = inv(e)*a' \\
+\> \> 2.5000e-01 \\
+\> \>  -2.7756e-17 \\
+\> \>   2.5000e-01 
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+
+En principio en \textbf{f} y en \textbf{g} se está realizando la misma operación. Sin embargo vemos que los valores obtenidos y su forma de expresarlos no son exactamente iguales. Esto se debe a que el operador $\setminus$ evita el cálculo directo de la inversa de la matriz \textbf{e}. Si la matriz de coeficientes es singular, Octave/Matlab emite un mensaje de advertencia (\textit{warning: matrix singular to machine precision}) y calcula una solución en el sentido de norma mínima.\par 
+
+\subsection*{Operadores relacionales y lógicos}
+Los operadores relacionales son utilizados para la comparación de variables y su implementación devuelve una variable lógica \textit{True} (que equivale al valor numérico 1)  o \textit{False} (que equivale al valor numérico 0). 
+
+\begin{center}
+\begin{tabular}{| c | c | }
+\hline
+s\'imbolo & operador  \\
+\hline 
+\verb'<' & menor \\
+\verb'<=' & menor o igual \\
+\verb'>' & mayor \\
+\verb'>=' & mayor igual \\
+\verb'==' & igual a (equivalencia) \\
+\verb'!=; ~=' & distinto a \\
+\hline  
+\end{tabular}
+\end{center}
+
+Los operadores lógicos por su parte operan entre dos variables lógicas y su resultado es nuevamente una variable lógica:
+
+\begin{center}
+\begin{tabular}{| c | c | }
+\hline
+s\'imbolo & operador  \\
+\hline 
+\verb'|' & OR: el resultado será cierto si es cierto el valor de al menos una de las dos variables. \\
+\verb'||' & OR con cortocircuito. Igual a OR pero evalúa las condiciones mientras sean verdaderas.\\
+\verb'&' & AND: el resultado de la operación es cierto si son ciertas las dos variables. \\
+\verb'&&' & AND con cortocircuito. Igual a AND pero evalúa las condiciones mientras sean verdaderas.\\
+\verb'xor()' & OR EXCLUSIVO: el resultado sólo es verdadero si lo es una de las dos variables. \\
+\verb'!; ~' & NOT: opera sobre una sola variable lógica, da como resultado el valor contrario al de la variable. \\
+\hline  
+\end{tabular}
+\end{center}
+
+\noindent Los operadores con cortocircuito sólo operan sobre escalares, los demás operadores pueden usarse sobre escalares, vectores y matrices, siempre que tengan la misma dimensión. El resultado será un arreglo lógico (arreglo con valores unos (\textit{true}) y ceros \textit{false}). Más ejemplos:
+
+\begin{minipage}[t]{0.58\textwidth}
+\begin{shaded}
+
+\begin{tabbing}
+\hspace*{0.1cm}\=\hspace*{0.58cm}\= \kill
+ $>>$ x1 = 0; \quad \footnotesize{$\%$variable escalar}\\
+ $>>$ x2 = 10; \quad \footnotesize{$\%$variable escalar}\\
+ $>>$ x1 $>$ x2 \\
+ ans = 0 \quad \footnotesize{$\%$variable lógica}\\ 
+ $>>$ $\sim$x1 \\
+ ans = 1 \quad \footnotesize{$\%$variable lógica}\\
+ $>>$ $\sim$x2 \\
+ ans = 0 \quad \footnotesize{$\%$variable lógica}\\
+ $>>$ x1 == x2 \\
+ ans = 0 \quad \footnotesize{$\%$variable lógica}\\
+ $>>$ a = [5 5 0]; \quad \footnotesize{$\%$variable vectorial}\\
+ $>>$ b = [0 5 5]; \quad \footnotesize{$\%$variable vectorial}\\
+ $>>$ a $\&$ b \\
+ \> ans = 0 1 0\footnotesize{$\%$arreglo lógico de comp. elemento a elemento}\\ 
+ $>>$ a $|$ b \\
+ \> ans = 1 1 1\footnotesize{$\%$arreglo lógico de comp. elemento a elemento}\\
+ $>>$ v = true  \footnotesize{$\%$ definición de variable lógica verdadero}\\
+ \> v = 1 \quad  \footnotesize{$\%$ notar que le asigna el valor 1} \\ 
+ $>>$ f = false  \footnotesize{$\%$ definición de variable lógica falso}\\
+ \> f = 0 \quad \footnotesize{$\%$ notar que le asigna el valor 0} \\
+ $>>$ v $>$ f \footnotesize{$\%$ Cuidado: no distingue entre las variables}\\
+ \> ans 1  \quad  \footnotesize{$\%$ lógicas y las variables enteras 1 y 0}\\
+ \> $>>$ vs = 'true' \footnotesize{$\%$ def. variable caracter con valor true}\\
+\> \> vs = true 
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.42\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.43cm}\= \kill
+\> $>>$ fs = 'false' \footnotesize{$\%$ def. variable caracter con valor false} \\
+\> \> fs = false \\
+\> $>>$ vs $\&$ fs \\ 
+\footnotesize{error: nonconformant arguments (op1 is 1x4, op2 is 1x5)}\\
+\footnotesize{Intenta comparar elementos de 2 variables con dif. longitud} \\
+\> pera = 'pera'; kiwi = 'kiwi'; banana = $""$;\\
+\> $>>$ pera $\&$ kiwi \\ 
+\> \> ans = 1 1 1 1 \\
+\> $>>$ pera != kiwi \\
+\> \> ans = 1 1 1 1 \\
+\> $>>$ pera $\&\&$ kiwi \\ 
+\> \> ans = 1 \\
+\> $>>$ pera $\&\&$ banana \footnotesize{$\%$ Una variable caracter es falsa si}\\ 
+\> \> ans = 0 \quad \footnotesize{$\%$ está vacía como la variable banana}\\
+\> $>>$ x = 2; \\
+\> $>>$ 1 $<$ x $<$3 \footnotesize{$\%$ comparación de izquierda a derecha}\\
+\> \> ans = 1 \\
+\> $>>$ x = 5; \\
+\> $>>$ 1 $<$ x $<$3 \footnotesize{$\%$ como 1$<$5 = 1 esta sentencia}\\
+\> \> ans = 1 \qquad \qquad \footnotesize{$\%$ resulta verdadera}\\
+\> $>>$ 1 $<$ x $\&$ x $<$ 3 \footnotesize {$\%$ \textbf{forma correcta de realizar}}\\
+\> \> ans = 0 \qquad \qquad \footnotesize{$\%$ \textbf{una doble comparación}}\\
+\> $>>$ (1 $<$ x $\&$ x) $<$ 3 \footnotesize{$\%$ los paréntesis pueden alterar}\\
+\> \> ans = 1 \qquad \qquad \footnotesize{$\%$ el orden de las operaciones}
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+
+\noindent En los últimos ejemplos vemos que cuando consideramos más de una operación relacional a la vez, las mismas son realizadas de izquierda a derecha. Al mismo tiempo, Octave/Matlab primero realiza las comparaciones relacionales y luego las lógicas. Es por esto que al considerar los paréntesis en el último ejemplo cambió el resultado respecto del ejemplo anterior.
+Por último, en estos ejemplos en algunas líneas luego de definir el valor de las variables hicimos uso del \textbf{;}. Usar \textbf{;} al finalizar la línea evita que sea mostrada en pantalla, algo que suele ser muy útil, sobre todo cuando escribamos código en archivos. Cuando queremos que una variable sea impresa en pantalla utilizamos el comando \verb'disp()' o el comando \verb'fprintf()'. Este último necesita que se especifique el formato del tipo de dato a imprimir. \par 
+
+\subsection*{Estructuras de selección y de iteración}
+Estructura de selecci\'on: permite que conjuntos de instrucciones alternativas puedan ejecutarse seg\'un se cumpla (o no) una determinada condici\'on. Para ello utilizamos la sentencias \textbf{\textit{if, elseif, else}}: \par
+
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+Estructura: \\
+\> if (condición)\\
+\> \> sentencias\\
+\> elseif (condición) \\
+\> \> sentencias \\  
+\> \vdots \\
+\> elseif (condición) \\
+\> \> sentencias \\  
+\> else \\
+\> \> sentencias \\
+\> end	
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{shaded}
+Ejemplo: 
+\begin{verbatim}
+>> a = true 
+a = 1 
+>> if(a) 
+disp('Hola')  
+elseif(a)     
+disp('Chau') 
+end 
+Hola 
+\end{verbatim}
+\footnotesize{Notar que definir a \textbf{a} como true es equivalente a asignarle el valor 1. ?`Por qué muestra el valor 'Hola' y no el valor 'Chau'?}
+\end{shaded}
+\end{minipage}
+
+\noindent donde puede aparecer cualquier n\'umero de \textbf{\textit{elseif}} o incluso ninguno. De manera secuencial se van probando cada una de las condiciones y cuando una es verdadera, se ejecutan las sentencias dentro de ella. Si ninguna de las condiciones es verdadera y la cláusula \textbf{\textit{else}} está presente, se ejecutan las sentencias dentro del \textbf{\textit{else}}. Sólo puede aparecer una cláusula \textbf{\textit{else}}, y debe ser la última declaración. La condición en una sentencia \textbf{\textit{if}} se considera verdadera si su resultado es no vacío y contiene sólo elementos no nulos, reales o lógicos. De lo contrario, la expresión será falsa. Una expresión lógica puede formarse comparando los valores de expresiones aritméticas utilizando operadores relacionales y pueden combinarse usando operadores l\'ogicos.\par
+
+
+Estructuras de iteración: una estructura de control iterativa permite la repetición de una serie determinada de instrucciones. Este conjunto de instrucciones a repetir se denomina bucle ($loop$ en inglés) y cada repetición del mismo se denomina iteración. Para bucles donde el n\'umero de iteraciones es fijo y conocido de antemano usamos la sentencia \textbf{\textit{for}}:\par 
+\vspace{-0.2 cm}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+Estructura:\\
+\>for var = valor inicial:incremento:valor final \\
+\> \> sentencias\\
+\> \> \vdots \\
+\> \> sentencias \\
+\> end \\
+
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{shaded}
+Ejemplo: 
+\begin{verbatim}
+>> x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+>> for i = 1:2:length(x) 
+disp(x(i)) 
+end 
+ -4, 2, 0, 2, 4 
+\end{verbatim}
+\vspace{-0.16 cm}
+\footnotesize{En este ejemplo se muestran los elementos del vector \textbf{x} con índice impar.}
+\end{shaded}
+\end{minipage}
+
+\noindent donde la variable \textbf{var} es una variable entera que puede ser o bien un vector o definirse como: \textbf{var = valor inicial:incremento:valor final}, donde \textbf{var} tomará los valores entre \textbf{valor inicial} y \textbf{valor final} con paso \textbf{incremento}. Cuando \textbf{paso} es igual a 1 no necesita ser especificado. Al ser \textbf{var} una variable entera puede tomar valores negativos, al igual que el \textbf{paso} puede ser ascendente o descendente. \par 
+
+Por otra parte, para bucles donde el n\'umero de iteraciones es desconocido de antemano usamos la sentencia \textbf{\textit{while}}. En este caso el bucle se repite mientras se cumple una determinada condici\'on (bucles condicionales):\par
+\vspace{-0.2 cm}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+Estructura: \\
+\> while(condición)\\
+ \> \> sentencias\\
+ \> \> \vdots \\
+ \> \> sentencias \\
+\> end \\
+A continuación veremos un ejemplo que \\ 
+involucra un contador: 
+\end{tabbing}
+\end{shaded}
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+
+\begin{verbatim}
+ >> a =  1; 
+ >> while(a<=3) 
+disp(a) 
+a = a + 1; % que equivale a a++
+end 
+ 3,  2,  1  
+\end{verbatim}
+\vspace{0.18 cm}
+\footnotesize{Notar que en el ejemplo elegido, \textbf{a} debe ser modificado} \\
+\footnotesize{(incrementado en este caso) para que el lazo pueda terminar en algún momento.}
+\end{shaded}
+\end{minipage}
+
+Lo primero que hace la declaración \textbf{\textit{while}} es probar la condición. Si la condición es verdadera, ejecuta las sentencias y vuelve a probar la condición, si sigue siendo cierta, las sentencias se ejecutan de nuevo. Este proceso se repite hasta que la condición deja de ser cierta. Si la condición es inicialmente falsa, el cuerpo del bucle nunca se ejecuta. 
+
+\subsection*{Funciones}
+Matlab/Octave tiene definido funciones matemáticas tales como: \verb'cos(x)', \verb'sin(x)', \verb'tan(x)', \verb'abs(x)', \verb'exp(x)', \verb'sqrt(x)', \verb'log(x)', \verb'log2(x)', \verb'log10(x)', \verb'rem(x)', \verb'sign(x)', etc., donde la operación realizada por cada función no siempre resulta evidente, y si quiere una explicación sobre la operación que realiza o sobre cómo utilizarla puede escribir el comando \verb'help' seguido del nombre de la función en la ventana de comandos. Algo importante a tener en cuenta es que las funciones trigonométricas operan sobre radianes y no sobre grados. Matlab/Octave también posee una gran librería de funciones predefinidas que son de gran utilidad y que algunas iremos mencionando durante el curso. Pero puede ocurrir que necesitamos definir funciones propias, éstas pueden ser definidas de varias formas y en particular vamos a ver dos, funciones anónimas y funciones de usuario definidas como un subprograma. Las funciones anónimas son una forma simple de definir funciones de línea. La forma general es:
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+\> nombre$\_$de$\_$la$\_$función =@(argumentos)expresión
+\end{tabbing}
+\end{shaded}
+\noindent donde \textbf{nombre$\_$de$\_$la$\_$función} es el nombre con el que llamamos a la función, \textbf{argumentos} son las variables de la función y \textbf{expresión} es la función en sí misma. Este tipo de funciones son útiles cuando se quiere realizar una misma operación repetidas veces. Para hacer uso de las funciones anónimas, se invoca a la función mediante su nombre especificando entre paréntesis los argumentos previamente definidos. Por otro lado, para definir una funci\'on de usuario en un archivo que ser\'a llamado por un programa principal, la misma debe ser especificada como sigue: \par
+
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+\> function[argumentos de salida] = nombre (argumentos de entrada)\\
+\> \> declaraciones de variables locales \\
+\> \> sentencias \\
+% \> \> nombre = expresión \\ esto no es para funciones recursivas?
+\> end 
+\end{tabbing}
+\end{shaded}
+
+\noindent donde \textbf{argumentos de entrada} son los valores que serán pasados desde el programa principal a la función para que pueda realizar las operaciones y devolver el resultado de la evaluación de la función en la variable \textbf{nombre}, así como otros resultados que puedan generarse y serán devueltos en los \textbf{argumentos de salida}. Algo muy importante a tener en cuenta es que el nombre de la función debe coincidir con el nombre del \textbf{archivo.m} en el que es guardada. Las funciones son llamadas e invocadas en el programa principal mediante: \par
+
+\begin{shaded}
+\begin{tabbing}
+\hspace*{0.5cm}\=\hspace*{0.5cm}\= \kill
+%\> run('nombre') \\
+\> [argumentos de salida] =nombre (argumentos de entrada)
+\end{tabbing}
+\end{shaded}
+
+
+\subsection*{Gráficas}
+Matlab/Octave cuenta con una gran variedad de funciones destinadas a realizar gr\'aficos. Entre ellas encontramos \verb'plot()', \verb'stem(), bar(), polar(), semilogx()' y muchas otras. La  funci\'on \verb'plot()' es la que más utilizaremos a lo largo de este curso. Para utilizarla en general necesitamos especificar entre paréntesis dos variables separadas por coma, que representen las coordenadas cartesianas $x$ e $y$. Por defecto, para graficar, el comando \verb'plot()' utiliza líneas. Pero muchas veces es conveniente graficar utilizando  símbolos ('*', 'o', '+', etc.) y para ello se especifica el mismo como un tercer argumento entre comillas. Otro parámetro que puede ser especificado es el color ('k', 'r', 'g', 'b', etc. ). Para mayor detalle escriba en la ventana de comandos \verb'help plot' \par
+Si se desea graficar distintas curvas en una misma figura es necesario indicarle  al  programa  que  una  nueva  invocaci\'on  a \verb'plot()' no  debe "borrar" los gr\'aficos realizados anteriormente. Esto se logra con el commando \verb'hold on'. De forma similar, si es necesario volver a indicarle al programa que s\'olo  debe  graficar  la  \'ultima  invocación  de  la  funci\'on \verb'plot()',  se  debe  usar  el comando \verb'hold off'. Por defecto, el commando \verb'hold' se encuentra en el estado off. Existen comandos que se encargan de agregar etiquetas. Algunos importantes son: \verb'title(), xlabel(), ylabel' y \verb'legend()'. Existen  otras  funciones  para  manipular  propiedades  de  los  gráficos  como \verb'axes(), axis(), grid' y  otras.  Para  conocer  c\'omo  funcionan,  se  recomienda consultar el comando \verb'help'. Para guardar una figura en un archivo utilizamos el comando \verb'print'. Por ejemplo, \verb'print figure1.pdf' guarda la figura en formato \textbf{pdf} en el archivo \textbf{figure1.pdf}, mientras que \verb'print -djpg figure1' guarda la figura con formato \textbf{jpg} en el archivo \textbf{figure1.jpg}. Para mayor detalle, \verb'help print'. Como \'ultimo detalle, mediante el comando \verb'figure()' pueden generarse distintos gr\'aficos, es decir, nuevas ventanas en donde graficar las distintas variables. Como argumento (opcional) esta función toma el n\'umero de identificaci\'on de cada ventana. Si ning\'un n\'umero es especificado, por defecto se toma el siguiente valor disponible. \\
+
+\subsection*{Entrada y salida de datos por archivo}
+La asignación de variables también puede realizarse mediante lectura de un archivo externo donde están guardados los valores. Para la lectura de datos en archivos existen varias funciones predefinidas (o comandos), en particular acá introducimos dos:
+
+\begin{minipage}[t]{0.48\textwidth}
+\begin{shaded}
+
+Ejemplo 1: datos sin encabezado:
+\begin{verbatim}
+A = load('nombre_archivo.txt');
+xop1 = A(:,1);
+yop1 = A(:,2);
+
+\end{verbatim}
+\vspace{0.55 cm}
+\end{shaded}
+
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{shaded}
+
+Ejemplo 2: datos con encabezado:
+\begin{verbatim}
+fid = fopen('nombre_archivo.txt', 'r');
+data = textscan(fid,'%f','HeaderLines',n);
+fclose(fid);
+xop2 = data{1};
+yop2 = data{2};
+\end{verbatim}
+\end{shaded}
+\end{minipage}
+
+\vspace{0.5 cm}
+
+Donde \textbf{nombre\_archivo.txt} es el archivo en en que están guardados los valores de las variables. En el ejemplo 2 se debe aclarar el formato con el que se debe leer el dato. Por ejemplo, $\%$d es el formato para datos enteros, $\%$f para reales en notación decimal, $\%$e para notación exponencial, $\%$A para carácter. Por otro lado, la cantidad de líneas que conforman el encabezado, n, debe ser un número entero mayor que cero.\par
+Para guardar datos en un archivo hay varias formas, pero la más simple es mediante el uso del comando \verb'save', seguido del cual escribimos el nombre del archivo en el que vamos a guardar los datos y las variables a guardar. Por ejemplo, sean las variables \verb'v1' y \verb'v2', para guardarlas escribimos: \verb"save 'nombre-archivo-salida.dat'" \verb'v1 v2'. De esta manera guarda las variables \verb'v1' y \verb'v2' cada una con su encabezado. Si queremos que no escriba encabezado y que las variables sean escritas una debajo de la otra, agregamos \verb'-ascii', es decir: \verb"save -ascii 'nombre-archivo-salida.dat'" \verb"v1 v2". Otro comando muy útil es \verb'csvwrite'. Con este comando escribimos los datos de salida separados por coma, pero los mismos antes tienen que haber sido acomodados en un sólo arreglo, por ejemplo \verb'V'. Una vez hecho ésto, simplemente se ejecuta \verb"csvwite('nombre-archivo-salida.dat', V)". \par 
+
+\vspace{0.2 cm}
+
+\textbf{\underline{Algunos detalles útiles}}:
+Una buena práctica es comentar en la primera l\'inea el nombre del programa con una breve descripción del problema a resolver, as\'i como tambi\'en documentar las operaciones que se realizan en el mismo. Para ello se utiliza el símbolo $\%$. Todo lo que escribamos detrás de él será interpretado como un comentario y no será ejecutado. También es buena práctica utilizar los comandos \verb'clc; clear all; close all' al comienzo del programa. Con ellos limpiamos el espacio de trabajo, las variables y cerramos las figuras abiertas, respectivamente. Matlab/Octave siempre muestra el resultado de la operaci\'on realizada, lo que puede llegar a ser molesto. Como fuimos viendo en algunos de los ejemplos, para decirle que no queremos visualizar el resultado en la pantalla es necesario agregar un ';' al final de la l\'inea ejecutada, tanto en la ventana de comandos como el editor de trabajo. Otra buena práctica es inicializar las variables con la finalidad de evitar inconvenientes. Las variables en general son mostradas con formato \verb'format short'. Si queremos visualizar un mayor número de decimales, se consigue especificando \verb'format long'. Si generamos un bucle infinito (un bucle que nunca termina por sí solo), se puede detener su ejecución pulsando Ctrl+c. Cuando tenga dudas sobre algo, puede utilizar el comando help o la internet, que puede proporcionar buenas respuestas siempre que haga preguntas claras!\par 
+\vspace{-0.5 cm}
+\section*{Ejercitaci\'on}
+
+
+
+%{\bf Ej. 3.} Lo que impone el sistema.\\[5pt]
+%Dado el siguiente sistema de ecuaciones
+%
+%\begin{equation}
+%\left\{ \begin{array}{rcl}
+%42x+66y+68z+66w&=&7\\
+%92x+4y+76z+17w&=&3\\
+%79x+85y+74z+71w&=&10\\
+%96x+93y+39z+3w&=&0
+%\end{array} \right. \nonumber
+%\end{equation}
+%%\begin{itemize}
+%%\item[{\bf a)}]
+%Expresar su forma matricial. Verificar que tiene soluci\'on \'unica y resolver el sistema utilizando OCTAVE/MATLAB. Verificar que el conjunto de valores hallados es efectivamente soluci\'on del sistema.
+
+%\item[{\bf b)}] Resuelva utilizando OCTAVE/MATLAB. Verificar que el conjunto de valores hallados es efectivamente soluci\'on del sistema.
+
+%\end{itemize} \medskip
+
+{\bf Ej. 1: Variables.} A continuación se presentan sentencias de programación. Ejecutarlas en Octave/Matlab de manera secuencial, analizar el resultado y determinar si la variable es escalar, vectorial o matricial y el tipo de variable (real, compleja, lógica o caracter (string)). \par 
+\begin{center}
+\begin{tabular}{| c | c | c |}
+\hline
+sentencia & operación y resultado & tipo de variable \\
+\hline 
+a = -1 & &\\
+\hline 
+v = [a; -a] & & \\
+\hline
+A = [v  v] & &\\
+ \hline 
+A(1, 2) & & \\
+\hline 
+A*v & &\\
+ \hline 
+A.*v & &\\ 
+  \hline 
+inv(A) & &\\
+ \hline 
+v.*v & &\\
+ \hline
+ v*v & &\\
+ \hline
+  v*v' & &\\
+ \hline
+ v'*v & &\\
+ \hline
+ dot(v,v) & &\\
+ \hline
+raiz$\_$a = sqrt(a) & &\\
+ \hline 
+isreal(a) & &\\
+ \hline 
+isreal(raiz$\_$a) & &\\
+\hline 
+c = 'Hola'; d = 'mundo' & &\\
+ \hline 
+[c, ' ', d] & &\\
+\hline  
+t = true; f = false & &\\
+\hline  
+3 $<$ 2 & & \\
+\hline
+isreal(3 $<$ 2) & & \\
+\hline
+\end{tabular}
+\end{center}
+\medskip
+
+{\bf Ej. 2: Estructura de repetición For.}  
+Calcular la suma y el producto de los primeros 50 números enteros positivos. \par 
+\medskip
+
+{\bf Ej. 3: Estructura de repetición While.} 
+Genere un vector que guarde los números $a\in\mathbb{Z}^{+}$ tales que $a<2000$ y que $a$ sea múltiplo de 2, 7 y 13. \underline{Ayuda}: Puede serle útil el comando \verb'mod()'. \par 
+\medskip
+
+{\bf Ej. 4: Estructura de selección.} 
+Mediante el análisis del discriminante del polinomio cuadrático (a$x^{2}$ + b$x$ + c) realice un programa que escriba en pantalla si las raíces serán reales e iguales, reales y distintas o complejas conjugadas. Para probarlo utilice como valores de los coeficientes del polinomio a = [0.1, 0.25, 1 ], b = 1 y c = 1. \par 
+\medskip
+
+{\bf Ej. 5: Funciones.}  %[5pt]
+%Adem\'{a}s de las funciones que ya vienen incorporadas en el programa, OCTAVE/MATLAB te permite definir tus propias funciones. Una de las formas es creando un archivo \textbf{.m}, que deber\'{a} tener el mismo nombre de la funci\'{o}n (\verb"function [salida1,salida2,...] = nombre (arg1,arg2,...)"), a la que podemos llamar desde la línea de comandos, de la misma forma que cualquier otra orden o función ya definida en OCTAVE/MATLAB; pero tambi\'{e}n se pueden definir funciones dentro de la misma l\'{i}nea de comando, utilizando las llamadas funciones anónimas: \verb"g = @(var1,var2,...) expr".
+\begin{itemize}
+
+\item[{\bf a)}] Buscar en la ayuda de Octave/Matlab ejemplos de funciones, para ello utilice \verb"help function", \verb"help function_handle".
+
+\item[{\bf b)}] Defina la siguiente función a trazos haciendo uso del comando \textbf{\textit{if}} y de los operadores l\'ogicos y relacionales. Implementarla como una función de usuario. 
+\begin{equation}
+f(x)=\left\{ \begin{array}{ccl}
+2&\text{si}&x<-2\\
+x^{2}&\text{si}& -2\leq x<3\\
+\frac{1}{x}&\text{si}&3\leq x \leq 10\\
+x&\text{si}&15<x<20\\
+3-x&\text{si}&x=22\\
+0&\text{en}&\text{cc}
+\end{array} \right. \nonumber
+\end{equation}
+
+Evalúe $f(x)$ en el vector x= [-30:0.5:30] y grafique el resultado haciendo uso del comando \verb"plot()". \par 
+
+\item[{\bf c})] Modifique el ejercicio 4 para que calcule las raíces del polinomio cuadrático. Implementarlo como una función de usuario donde los argumentos de entrada sean los coeficientes del polinomio y los argumentos de salida sean las raíces calculadas.  Calcule las raíces de: 
+\begin{itemize}
+\item[i)] 0.0$x^{2}$ + $x$ + 1, 
+\item[ii)] 0.1$x^{2}$ + $x$ + 1, 
+\item[iii)] 0.25$x^{2}$ + $x$ + 1, 
+\item[iv)] $x^{2}$ + $x$ + 1. 
+\end{itemize}
+?`Qué sucede en el item i)? Modifique la función para que le avise al programa principal si los coeficientes pasados como argumento de entrada no corresponden a un polinomio cuadrático. \par 
+
+\item[{\bf d)}] Dentro de las funciones predefinidas en Matlab/Octave hay dos que ser\'an de gran utilidad en las pr\'oximas pr\'acticas, ellas son \verb"polyfit()" y \verb"spline()". Busque y explique qu\'e hace cada una de las funciones. Seguramente habr\'a encontrado que las mismas pueden ser utilizadas con dos o tres argumentos, explique en cada caso que es lo que devuelve la funci\'on. Si considera su implementaci\'on con dos argumentos, ?`qu\'e otras funciones predefinidas debe utilizar para obtener el mismo resultado que con tres argumentos de entrada?    
+\end{itemize}
+\medskip 
+
+{\bf Ej. 6: Graficando funciones.} Ilusión óptica.\\%[5pt]
+Defina los vectores \verb"t", \verb"x" e \verb"y" de la siguiente manera:
+\begin{quote}
+    \begin{verbatim}
+    t=[0:2*pi/50:2*pi];
+    x=2*cos(t);
+    y=5*sin(t);
+    \end{verbatim}
+\end{quote}
+\vspace{-0.6cm}
+\begin{itemize}
+
+\item[{\bf a)}] Grafique \verb"x" e \verb"y" en función \verb"t". Los comandos \verb"plot()", \verb"figure()" y \verb"subplot()" pueden serle útiles.
+
+\item[{\bf b)}] La curva $\rm{\bf{r(t)}}=(x(t),y(t))$ representa una elipse descripta en forma param\'{e}trica. Para graficarla puede utilizar
+\verb"plot(x,y)".
+
+\item[{\bf c)}] \textquestiondown Cu\'{a}l parece ser el eje mayor de la elipse? \textquestiondown Cu\'{a}l es realmente el eje mayor de la elipse?\textquestiondown A qué se debe ésto? La sentencia \verb"axis equal" puede ser de utilidad. 
+
+\item[{\bf d)}] Grafique la siguiente curva descripta en forma param\'{e}trica:
+\begin{eqnarray*}
+x &=&\cos (t) \left(e^{\cos (t)}-2\cos (4t)-sin^{5}\left(\frac{t}{12}\right)\right) \\
+y &=&sen(t) \left(e^{\cos (t)}-2\cos (4t)-sin%
+^{5}\left(\frac{t}{12}\right)\right)
+\end{eqnarray*}
+Vea que sucede al modificar el paso de la variable $t$ (puede comenzar con el mismo $t$ de los incisos anteriores). Tambi\'{e}n pruebe extendiendo el l\'{\i}mite superior de la variable $t$, por ejemplo, a $4\pi $, $8\pi $, etc... Resulta interesante ver c\'{o}mo se va formando la curva a medida que varía el par\'{a}metro $t$. Para ello podemos intentar una especie de \textquotedblleft animaci\'{o}n\textquotedblright\ en Octave/Matlab\ con los comandos siguientes:
+\begin{verbatim}
+figure, axis([-3 3 -4 4]), hold on
+for i=1:length(t)-1
+plot(x(i:i+1),y(i:i+1));
+pause(1/10);
+end
+hold off
+\end{verbatim}
+\end{itemize}
+
+\medskip
+
+\subsection*{Uniendo errores con programación.}
+{\bf Ej. 7.}   
+La funci\'on coseno puede evaluarse por medio de la serie infinita:
+\begin{equation*}
+cos(x) = \sum_{n =0 }^{\infty}(-1)^{n}\frac{x^{(2n)}}{(2n)!}
+\end{equation*}
+Calcular la aproximación a $x = \pi/3$ con 8 cifras significativas. Guardar en un vector las sumas parciales y determinar la cantidad de términos a considerar para obtener la aproximación solicitada. Escribir la aproximación en función de la tolerancia considerada. \underline{Ayuda}: para el cálculo del factorial utilice la función \verb'factorial()' y para la solución exacta utilice \verb'cos(pi/3)'. \par  
+\medskip
+
+\textbf{Ej. 8.}
+Verifique que las funciones: \[ 
+f_1(x)=\sqrt{x}(\sqrt{x+1}-\sqrt{x})
+                       ~~{\rm y}~~                                            f_2(x)=\frac{\sqrt{x}}{\sqrt{x+1}+\sqrt{x}},
+                       \] resultan anal\'iticamente equivalentes. 
+\begin{itemize}
+\item[{\bf a)}] Calcule utilizando Octave/Matlab la evaluación las funciones en $x=10^{15}$. Para ello defina $f_1(x)$ y $f_2(x)$ como funciones anónimas.
+\item[{\bf b)}] ?`Qu\'e observa entre los valores obtenidos? Explique a qu\'e se deben los resultados anteriores.
+\item[{\bf c)}] Agregue a su programa las siguientes l\'ineas de código y haga un breve an\'alisis de los resultados.
+\lstinputlisting{TP2_ejercicio1.m}
+\end{itemize}\bigskip
+
+\textbf{Ej. 9.}
+Considere las siguientes f\'ormulas equivalentes: \[ 
+                                                   f_1(x)=\frac{1-\cos{x}}{x^2}
+                                                  \] y 
+                                                  \[
+                                                   f_2(x)=\frac{\sin^2{x}}{x^2(1+\cos{x}).}
+                                                  \] Implementar $f_1(x)$ y $f_2(x)$ como funciones anónimas. Agregar las siguientes l\'ineas de código donde ambas expresiones son evaluadas:
+\lstinputlisting{TP2_ejercicio2.m}
+\begin{itemize}
+\item Haga un an\'alisis de los resultados obtenidos.
+\item ?`Qu\'e sucede con ambas funciones para valores de $x \rightarrow 0$ y $x \rightarrow \pi$?
+\end{itemize}\bigskip
+
+
+%{\bf Ej. 5.} For y operadores relacionales.
+%\begin{itemize}
+%\item[{\bf a)}] Dado el siguiente {\it script} de Octave/Matlab:
+%\begin{verbatim}
+%for k=1:10
+%    for h=1:10
+%        if k==h
+%            A(k,h)=1;
+%        elseif (k<h)
+%            A(k,h)=2./(((k+h).^2)+1);
+%        else
+%            A(k,h)=0;
+%        end
+%    end
+%end
+%\end{verbatim}
+%%&& ~(1>2 || k==h
+%Describa los operadores relacionales utilizados dentro de la estructura de selección, ?`qué condiciones expresan? Realice el diagrama de flujo y describa qué resulta de su ejecución. 
+%
+%\item[{\bf b)}] Genere un vector con todos los números $a\in\mathbb{Z}^{+}$ de modo que $a<2000$ y que $a$ sea múltiplo de 2, 7 y 13.
+%\textbf{Pista:} Puede serle útil el comando \verb"mod".
+
+
+
+%Escriba una función de OCTAVE/MATLAB que permita obtener la {\it matriz de columnas cíclicas} de orden n dado un vector $v\in \mathbb{R}^{n}$. Es decir, para $n=4$, si $v=[a,b,c,d]^{T} \in \mathbb{R}^{4}$, la matriz buscada será
+%\begin{equation}
+%    A=\left(\begin{array}{cccc}
+%      a & b & c & d \\
+%      b & c & d & a \\
+%      c & d & a & b \\
+%      d & a & b & c
+%    \end{array}\right) \nonumber
+%\end{equation}
+%Pueden serle de utilidad las funciones \verb"circshift", \verb"size" y \verb"length".
+%\end{itemize} \medskip
+
+
+
+
+%{\bf Ej. 4: M\'as series}\\
+%\begin{itemize}
+%\item[{\bf a)}] Verifique gráficamente que
+%\begin{equation}
+%\lim_{N\rightarrow\infty}\sum_{n=1}^{N}\frac{(-1)^{n}}{n}=-\ln 2\ \ \text{y}\ \  \lim_{N\rightarrow\infty}\sum_{n=1}^{N}\frac{1}{n(n+1)}=1 \nonumber
+%\end{equation}
+%\end{itemize}
+
+
+
+%\item[{\bf d)}] Recordando la definici\'{o}n dada en forma recursiva del n\'{u}mero factorial
+%\begin{equation}
+%n!=\left\{ \begin{array}{ccl}
+%1&\text{si}&n=0\\
+%n(n-1)!&\text{si}& n\geq1\\
+%\end{array} \right. \nonumber
+%\end{equation}
+%definir una funci\'{o}n que permita calcular $n!$ para cualquier valor $n\in N$. Hacerlo como funci\'{o}n en un archivo \textbf{.m}. Comparar el resultado con los que se obtiene con la funci\'{o}n propia de OCTAVE/MATLAB \verb"factorial(N)".
+
+
+%\end{itemize} \medskip
+
+
+%{ \bf Ej. 6.} La geométrica es cosa serie. \\%[5pt]
+%Se sabe que la suma de la serie geom\'{e}trica es:
+%\begin{equation}
+%\sum_{n=1}^{\infty }a\cdot r^{n}=\frac{a\cdot r}{1-r}~~\text{si}\left\vert r\right\vert <1 \nonumber
+%\end{equation}
+%
+%\begin{itemize}
+%\item[{\bf a)}] Intente verificar con OCTAVE/MATLAB que
+%\begin{equation}
+%\sum_{n=1}^{\infty } \frac{1}{2^{n}}=\frac{\frac{1}{2}}{1-\frac{1}{2}}=1 \nonumber
+%\end{equation}
+%para lo cual puede seguir los siguientes pasos:
+%\begin{itemize}
+%\item Para un n\'{u}mero $N$ suficientemente grande (por ejemplo 50, 100, etc.) defina un vector \textbf{x }de largo $N$ cuyos elementos sean
+%\begin{equation}
+%\textbf{x}(n)=\left(\frac{1}{2}\right)^{n} \nonumber
+%\end{equation}
+%
+%\item Defina un segundo vector \textbf{y}, tambi\'{e}n de largo $N$, donde cada elemento \textbf{y}($n$) contenga el resultado de la suma de los elementos de \textbf{x}, desde $1$ a $n$, as\'{\i}:
+%\begin{eqnarray*}
+%\textbf{y}(1) &=&\textbf{x}(1) \\
+%\textbf{y}(2) &=&\textbf{x}(1)+\textbf{x}(2) \\
+%&&\vdots \\
+%\textbf{y}(N) &=&\textbf{x}(1)+\textbf{x}(2)+\cdots +\textbf{x}(N-1)+\textbf{x}(N)
+%\end{eqnarray*}
+%\item Grafique los elementos del vector \textbf{y}, y vea como se comportan los mismos para valores grandes de $n$. Para interpretar este comportamiento quiz\'{a} le sirva graficar tambi\'{e}n los elementos del vector $\textbf{x}$.
+%\end{itemize}
+%
+%\item[{\bf b)}] De la misma forma intente probar que
+%\begin{eqnarray*}
+%\sum_{n=1}^{\infty }(0.9)^{n} &=& \frac{0.9}{1-0.9}=9 \\
+%\sum\limits_{n=1}^{\infty }(0.99)^{n} &=& \frac{0.99}{1-0.99}=99 \\
+%\end{eqnarray*}
+%Ahora quiz\'{a} le convenga tomar un valor de $N$ mayor que en el caso anterior y comparar.
+%\end{itemize}\medskip
+%
+%{\bf Ej. 7.}  En el ejercicio anterior lo que se hizo fue aproximar el valor de una serie por el de la suma de sus $N$ primeros t\'{e}rminos.
+%\begin{itemize}
+%\item[{\bf a)}] ?`Por qu\'{e} es necesario hacer esta aproximaci\'{o}n?
+%\item[{\bf b)}] ?`Qu\'e criterio adoptar\'{i}a para decidir hasta qu\'{e} valor de $N$ es necesario desarrollar la sumatoria para que el resultado se aproxime lo suficiente al resultado verdadero? ?`Qu\'{e} significa \textit{aproximarse suficientemente}?
+%\item[{\bf c)}] Implemente un algoritmo que aproxime el valor de la serie incorporando el criterio de aproximaci\'{o}n elegido.
+%\end{itemize}
+%\medskip
+
+
+
+\end{document}

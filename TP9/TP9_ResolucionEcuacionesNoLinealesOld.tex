@@ -1,0 +1,169 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[a4paper]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage{subfigure}
+%\usepackage{enumitem}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ 
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  %firstnumber=1000,                % start line enumeration with line 1000
+  %frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Matlab,                 % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=1pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  %stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\renewcommand{\labelitemi}{$\bullet$}
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2020}}\\[5pt]
+\large{{\bf Pr\'actica 9: Soluci\'on de Ecuaciones No-lineales.}}\\
+\rule{17cm}{1pt}
+\bigskip
+\end{center}
+
+\begin{itemize}
+
+\subsection*{M\'etodo de Bisecci\'on}
+
+
+\item[{\bf Ej. 1:}] Describa en qu\'e consiste el m\'etodo de la \textit{bisecci\'on}. ?`Qu\'e tipo de problemas nos permite resolver? ?`En qu\'e casos el algoritmo conducir\'ia a un resultado err\'oneo?
+
+\item[{\bf Ej. 2:}] Se sabe que la funci\'on $f(x)=te^{-t}+t^{2}-1$ tiene una ra\'iz en el intervalo $[0,1]$. 
+
+\item[{\bf a)}] Utilizando el m\'etodo de bisecci\'on, ?`Cu\'antas iteraciones del algoritmo le asegurar\'ian encontrar dicha ra\'iz con una exactitud mayor o igual a $10^{-4}$?
+
+\item[{\bf b)}] Escriba una {\it funci\'on} de OCTAVE/MATLAB que encuentre dicha ra\'iz utilizando como criterio de corte la estimaci\'on num\'erica del error absoluto $\vert p_{n+1}-p_{n}\vert < 10^{-4}$.
+
+\item[{\bf c)}] Modificar el programa del  Ej. 2. b) para que indique cu\'antas iteraciones del algoritmo se realizaron para llegar a la aproximaci\'on requerida. Comparar con los resultados obtenidos anteriormente.
+
+\item[{\bf Ej. 3:}] Encontrar, en forma aproximada, los dos primeros puntos de intersecci\'on de las gr\'aficas de las funciones $f(x) = 4 + cos(x+1)$ y $g(x)=e^x sen(x)$, correspondientes al primer cuadrante. Elija como criterio de corte un error relativo menor al $1\%$.
+\underline{\textit{Sugerencia}}: Grafique ambas funciones para saber por d\'onde empezar a buscar.
+
+\item[{\bf Ej. 4:}] Determinar, con un error relativo menor a $10^{-4}$, la ra\'iz de la funci\'on $x^3 + 4x^2 -10$ en el intervalo $\left[1,2\right]$. Generar una tabla con los valores de $p_n$ y $f(p_n)$ para cada iteraci\'on $n$. En funci\'on a lo observado, ?`qu\'e otro criterio de corte podr\'ia utilizarse?
+
+\item[{\bf Ej. 5:}] Si un c\'irculo de radio \textit{a} rueda en el plano a lo largo del eje horizontal, un punto $P$ de la circunferencia trazar\'a una curva denominada cicloide. Esta curva puede expresarse mediante las siguientes ecuaciones param\'etricas: $x(t) = a(t - \sin t)$ e $y(t) = a(1 -\cos t)$. Suponga que el radio, \textit{a}, es de $1$ metro, si $(x, y)$ se miden en metros y $t$ representa tiempo en segundos, determine el primer instante en el que la magnitud de la velocidad es $0.43 m{/}s$. Use el m\'etodo de biseci\'on, y estime el instante con una precisi\'on de $E=10^{-4}$.
+
+\item[{\bf Ej. 6:}] En una planta de abastecimiento de combustible se tiene un tanque de forma esf\'erica. El volumen del l\'iquido almacenado en el tanque se puede calcular mediante la siguiente f\'ormula: $v(h) = \pi h^2 (R-h{/} 3 )$, donde $h$ representa la altura del l\'iquido dentro del tanque medida desde la parte inferior del tanque y $R$ su radio $(0 \leq h \leq 2R)$. Suponga que el tanque tiene un radio de $2 m$. Calcule la altura que debe tener el l\'iquido para que el tanque contenga $28 m^3$ . Calcule el resultado con una tolerancia $E=10^{-4}$ .
+
+\subsection*{ M\'etodo de Punto Fijo}
+
+
+\item[{\bf Ej. 7:}] Describa en qu\'e consiste el m\'etodo de \textit{punto fijo}. ¿Bajo que condiciones se asegura la convergencia del m\'etodo?
+
+\item[{\bf Ej. 8:}] 
+
+\item[{\bf a)}] Grafique la funci\'on $f(x)= e^x-\pi x$ en el intervalo $[0,2]$. ?`Cu\'antas ra\'ices observa?
+
+\item[{\bf b)}] Utilice la equaci\'on $x=g(x)=e^x{/}\pi$ para encontrar la ra\'iz de $f(x)$ m\'as pr\'oxima a $0$. \underline{\textit{Ayuda}}: Elija un valor inicial cercano la ra\'iz. Grafique las funciones $g(x)$ e $y=x$ en dicho intervalo.
+
+\item[{\bf c)}] Utilice la misma ecuaci\'on para encontrar la segunda ra\'iz? ?`Qu\'e observa? ?`Qu\'e puede concluir de este \'ultimo inciso?
+
+\item[{\bf d)}] Encuentre el intervalo de convergencia para el problema planteado, es decir, hallar los valores de $x$, tal que $|g'(x)|<1$. ?`Qu\'e puede decir de $g(x)$ en este caso?
+
+\item[{\bf Ej. 9:}] Utilice ahora la ecuaci\'on equivalente $x=g(x)=ln(\pi x)$ para encontrar la segunda ra\'iz de $f(x)$. Comparar con los resultados del Ej. 5. c). 
+
+\item[{\bf Ej. 10:}] Una farmac\'eutica produce $q$ gramos de cierto producto qu\'imico al d\'ia. El costo de producir esta cantidad de producto esta dado por:
+\begin{equation}
+ C(q)=1000+2q+3q^{2/3}.
+\end{equation} 
+La firma puede vender este producto a $\$4$ el gramo. ?`Cu\'antos gramos de este producto deber\'ia vender la compa\~n\'ia diariamente para poder tener ganancia?.
+
+\subsection *{M\'etodo de Newton-Raphson}
+
+\item[{\bf Ej. 11:}] Describa en qu\'e consiste el m\'etodo de \textit{Newton-Raphson}. ?`C\'omo puede estimar el error para un n\'umero $n$ de iteraciones?
+
+\item[{\bf Ej. 12:}]
+
+\item[{\bf a)}] La funci\'on \textit{newton}, detallada debajo, implementa el m\'etodo hom\'onimo. Comente el mismo indicando que operaci\'on se realiza en cada una de sus l\'ineas y que significan cada uno de sus par\'ametros.
+\begin{lstlisting}[language=matlab]
+ function [x,fx,xx] = newton(f,df,x0,TolX,MaxIter)
+   % newton.m: resuelve f(x) = 0 con Newton method.
+   h      = 1e-4;
+   h2     = 2*h;
+   TolFun = eps;
+   xx(1) = x0;
+   fx    = feval(f,x0);
+   for k = 1: MaxIter
+      
+     dfdx = feval(df,xx(k)); 
+     % dfdx = (feval(f,xx(k) + h)-feval(f,xx(k) - h))/h2; 
+     dx = -fx/dfdx;
+     xx(k+1) = xx(k)+dx;
+     fx = feval(f,xx(k + 1));
+     if abs(fx)<TolFun | abs(dx) < TolX
+        break;
+     endif
+   endfor
+   x = xx(k + 1);
+ endfunction
+\end{lstlisting}
+\item[{\bf b)}] Calcule una ra\'iz real de $f(x) = e^x - \pi x = 0$ con la f\'ormula de Newton. Utilizando el mismo valor inicial $x_0$ del Ej. $2.~c)$, ?`cu\'antas iteraciones se necesitaron para converger a la ra\'iz? ?`Qu\'e puede decir de la velocidad de convergencia de este m\'etodo?
+
+\item[{\bf Ej. 13:}] Utilice el m\'etodo de Newton-Raphson para encontrar el valor de $\sqrt{10}$ con un error absoluto menor a $10^{-8}$. Use como aproximaci\'on inicial de la soluci\'on al valor $x_0=3.$
+
+\item[{\bf Ej. 14:}] Un pr\'estamo de $X$ pesos es devuelto en $n$ cuotas de igual valor $M$, comenzando a partir del siguiente mes en el que se efectu\'o el pr\'estamo. Se puede demostrar que si la tasa de inter\'es mensual es $r$, entonces
+\begin{equation}
+ Xr=M(1-\frac{1}{(1+r)^n}).
+\end{equation}
+Suponga que se pidi\'o un pr\'estamo de $\$70000$ pesos para comprar un auto y fue devuelto en 60 cuotas de $\$1666.6$. Utilice el m\'etodo de Newton-Raphson para hallar la tasa de inter\'es mensual con cuatro cifras significativas.
+
+\item[{\bf Ej. 15:}] Suponga que se quiere lanzar un sat\'elite de modo que los vientos solares siempre pasen a trav\'es de dicho sat\'elite. Para esto, el mismo deber\'ia estar posicionado  siempre a lo largo de la l\'inea Tierra-Sol. Se sabe que para que esto ocurra, la distancia, $r$, que este sat\'elite debe tener respecto de la tierra debe satisfacer la siguiente equaci\'on:
+\begin{equation}
+ r^3(R-r)^2\omega^2-GM_s(R-r)^2+GM_tr^2 = 0.
+\end{equation}Encuentre el valor de esta distancia suponiendo que $G=6.67 \times 10^{11}$, la masa del sol, $M_s=1.98\times10^{30}$, la masa de la tierra, $M_t=5.98\times10^{24}$[kg], la distancia Tierra-Sol, $R=1.49 \times 10^{11}$[m] y el per\'iodo de translaci\'on medio de la tierra dado $T=3.15576\times10^7$[s].
+
+\subsection*{Sistemas de Ecuaciones no - lineales}
+
+\item[{\bf Ej. 16:}] Dado un sistema de dos ecuaciones con dos inc\'ognitas, desarrolle un c\'odigo que utilice el m\'etodo de Newton-Raphson para resolver dicho sistema con una tolerancia a definir por el usuario.
+
+\item[{\bf Ej. 17:}] Resuelva los siguientes sistemas de ecuaciones:
+\begin{eqnarray*}
+\begin{cases}
+x_1-x_2+1 = 0\\
+x_1^2+ x_2^2-4 = 0.
+\end{cases}
+\end{eqnarray*}
+\begin{eqnarray*}
+\begin{cases}
+3x^2 + 4y^2 = 3\\
+x^2 + y^2 = \sqrt{3{/}2}.
+\end{cases}
+\end{eqnarray*}
+% description}
+En cada caso, verifique gr\'aficamente como se aproxima la soluci\'on num\'erica a la verdadera en cada iteraci\'on. Para esto, puede graficar el valor de $f(u_n,v_n)$ en funci\'on del n\'umero de iteraci\'on $n$ correspondiente, junto con el valor del t\'ermino independiente.
+\end{itemize}
+\end{document}

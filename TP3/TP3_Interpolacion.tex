@@ -1,0 +1,470 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[latin1]{inputenc}
+%\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage[a4paper]{geometry}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{textcomp}
+\usepackage{eqnarray,amsmath}
+
+\geometry{left=2.cm,right=2.cm,top=1.5cm,bottom=2.5cm}
+
+\begin{document}
+	
+	\makeatletter
+	\renewcommand{\labelenumi}{\textbf{Ej. \theenumi:}}
+	\makeatother
+	
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 3: Interpolaci\'on.}}\\
+\rule{17cm}{1pt}
+\bigskip
+\end{center}
+
+Toda función continua puede ser aproximada por un polinomio de la forma $P_{n}(x) = a_{n}x^{n} + a_{n-1}x^{n-1} + ... + a_{1}x + a_{0}$, donde $n$ es un entero no negativo y $a_{i}$ con $i = 0, ... n$ son constantes reales. Dada una función cualquiera, definida y continua en un intervalo cerrado, existe un polinomio que se aproxima a la función tanto como se quiera. Dicho polinomio es único. Una de las ventajas de aproximar una función con un polinomio es, por ejemplo, que la derivada y la integral de un polinomio también son polinomios y son fáciles de determinar. \\
+Para la interpolación, los polinomios de Taylor no son apropiados puesto que centran la información alrededor de un único punto, dando una buena aproximación en el entorno del punto pero no en general a medida que nos apartamos de él. Una buena aproximación polinómica debe ofrecer una aproximación relativamente exacta en todo el intervalo de interés. Si bien el polinomio interpolante es único, la manera de calcularlo no lo es. En esta práctica veremos algunos de los diferentes métodos para determinar a partir de conocer n+1 puntos distintos y su evaluación, el polinomio interpolante de grado a lo sumo n (el que se obtiene de considerar los n+1 puntos) que cumple con pasar por los valores considerados para su construcción. Los puntos a utilizar no requieren que estén igualmente espaciados o que los valores de la abscisa estén en orden ascendente.
+
+\subsection*{Interpolación polinómica de Lagrange}
+
+Sea $f$ una función definida en los $n+1$ puntos distintos $x_{0}, x_{1}, ..., x_{n}$. Existe un único polinomio $P_{l}(x)$ de grado a lo sumo $n$ tal que:
+\begin{equation}
+f(x_{k}) = P_{l}(x_{k}) \qquad \text{para cada} \ k = 0, 1, ..., n. \nonumber
+\end{equation}
+Este polinomio está dado por:
+\begin{equation}
+P_{l}(x) = f(x_{0})L_{n,0}(x) + ... + f(x_{n})L_{n,n}(x) = \sum_{k = 0}^{n}f(x_{k})L_{n,k}(x), \nonumber
+\end{equation}
+donde $L_{n,k}$ se define para cada $k = 0, 1, ..., n$ a partir de:
+\begin{equation}
+L_{n,k}(x) = \frac{(x - x_{0})(x - x_{1})... (x - x_{k-1})(x - x_{k+1})... (x - x_{n})}{(x_{k} - x_{0})(x_{k} - x_{1})...(x_{k} - x_{k-1})(x_{k} - x_{k+1})... (x_{k} - x_{n})} = \prod_{\substack{i = 0 \\ i\neq k}}^{n} \frac{(x - x_{i})}{(x_{k} - x_{i})}. \nonumber
+\end{equation}
+
+\subsection*{Interpolación de Newton en diferencias divididas}
+El polinomio de interpolación de Newton de grado n,
+\begin{equation} 
+P_{n}(x) = b_{0} + b_{1}(x - x_{0}) + b_{2}(x - x_{0})(x -x_{1}) + b_{n}(x - x_{0})(x - x_{1})...(x - x_{n-1}), \nonumber
+\end{equation}
+es obtenido a partir de los pares $(x_{0}, f(x_{0})), (x_{1}, f(x_{1})), ... (x_{n}, f(x_{n}))$, donde los coeficientes $b_{i}, i = 0, 1,... ,n$ están dados por:
+\begin{align*}
+b_{0} &= f(x_{0}) \\ 
+b_{1} &= f[x_{1}, x_{0}] \\
+b_{2} &= f[x_{2}, x_{1}, x_{0}]\\
+ &\;\;\vdots \notag \\
+b_{n} &= f[x_{n}, x_{n-1}, ..., x_{1}, x_{0}]
+\end{align*}
+A las evaluaciones de las funciones entre paréntesis se las conoce como diferencias divididas y se calculan a partir de:
+\begin{align*}
+f[x_{i},x_{j}] &= \frac{f(x_{i}) - f(x_{j})}{x_{i} - x_{j}} \quad \text{(expresión para la primera diferencia dividida)}\\
+f[x_{i}, x_{j}, x_{k}] &= \frac{f[x_{i} - x_{j}] - f[x_{j} - x_{k}] }{x_{i} - x_{k}} \quad \text{(expresión para la segunda diferencia dividida)}\\
+ &\;\;\vdots \notag \\
+f[x_{n}, x_{n-1}, ..., x_{1}, x_{0}] &= \frac{f[x_{n}, x_{n-1}, ..., x_{1}] - f[x_{n-1}, ..., x_{1}, x_{0}]}{x_{n} - x_{0}} \quad \text{(expresión para la n-ésima diferencia dividida)}
+\end{align*} 
+Como puede notarse, las diferencias de orden superior son obtenidas a partir de las diferencias de orden inferior, es decir, son expresiones recursivas.
+
+\subsection*{Matriz de Vandermonde}
+La matriz de Vandermonde es una matriz de progresión geométrica en cada fila:
+\begin{equation*}
+\begin{bmatrix}
+1 & \alpha_{1} & \alpha_{1}^{2} & ... &\alpha_{1}^{n-1} \\
+1 & \alpha_{2} & \alpha_{2}^{2} & ... & \alpha_{2}^{n-1} \\
+\vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & \alpha_{n} & \alpha_{n}^{2} & ... & \alpha_{n}^{n-1}  
+\end{bmatrix}
+\end{equation*}
+A partir de la matriz de Vandermonde podemos encontrar de forma muy simple (pero no aconsejable) los coeficientes del polinomio de interpolación. Sean $x_{0}, x_{1},...,  x_{n}$ los n+1 puntos donde se conoce la evaluación de la función $f$, $y_{0}, y_{1}, ..., y_{n}$. Luego, evaluar el polinomio interpolante en cada uno de los puntos nos permite escribir el siguiente sistema de ecuaciones:
+\begin{equation*}
+\begin{bmatrix}
+1 & x_{0} & x_{0}^{2} & ... & x_{0}^{n} \\
+1 & x_{1} & x_{1}^{2} & ... & x_{1}^{n} \\
+\vdots & \vdots & \vdots & \vdots & \vdots\\
+1 & x_{n} & x_{n}^{2} & ... & x_{n}^{n}  
+\end{bmatrix}
+\begin{bmatrix}
+a_{0} \\
+a_{1} \\
+\vdots \\
+a_{n}
+\end{bmatrix}
+=
+\begin{bmatrix}
+y_{0} \\
+y_{1} \\
+\vdots \\
+y_{n}
+\end{bmatrix}
+\Rightarrow \ XA = Y
+\end{equation*}
+si el determinante de $X$ es distinto de cero ($|X| \neq 0$), podemos encontrar los coeficientes del polinomio a partir de:
+\begin{equation*}
+A = X^{-1}Y
+\end{equation*}
+
+\subsection*{Interpolación mediante trazadores - Spline}
+
+Los m\'etodos vistos anteriormente permiten obtener polinomios interpolantes cuyo grado crece con $n$. Esto implica que, al aumentar la cantidad de puntos, el polinomio interpolante se vuelve m\'as oscilante, dejando de ser una buena aproximaci\'on a $f$. Para solucionar este problema surge el m\'etodo de trazadores o {\it spline}, el cual consiste en la determinaci\'on de un polinomio interpolante  definido a trozos, cuyo grado podemos elegir independientemente del n\'umero de puntos a interpolar. Es decir, se busca:
+\begin{equation*}
+P(x)=\left\{ \begin{array}{llll}
+S_0(x) & \mbox{si $x \in [x_0,x_1]$}\\
+S_1(x) & \mbox{si $x \in [x_1,x_2]$}\\
+& \vdots\\
+S_n(x) & \mbox{si $x \in [x_{n-1},x_n]$} \end{array} \right.
+\end{equation*}
+en donde el grado de cada $S_i(x)$ depender\'a del tipo de trazador deseado. Por ejemplo, las curvas de tercer grado empleadas para unir cada par de datos se llaman trazadores cúbicos. Esas funciones se pueden construir de tal forma que las conexiones entre ecuaciones cúbicas adyacentes resulten visualmente suaves. Así, el trazador también une los puntos, pero como está limitado a cambios de tercer grado, las oscilaciones son mínimas. De esta manera, el trazador usualmente proporciona una mejor aproximación al comportamiento de las funciones que tienen cambios locales y abruptos. \par
+En particular, la unión más simple entre dos puntos es una línea recta. Los trazadores de primer grado, o spline lineal, para un grupo de datos ordenados pueden definirse como un conjunto de funciones lineales:
+
+\begin{eqnarray*}
+f(x) &=& f(x_0 ) + m_0 (x - x_0 ) \quad x_0 < x < x_1 \\
+f(x) &=& f(x_1 ) + m_1 (x - x_1 ) \quad x_1 < x < x_2 \\
+\vdots \\
+f(x) &=& f(x_{n-1} ) + m_{n-1} (x - x_{n-1} ) \quad x_{n-1} < x < x_n
+\end{eqnarray*}
+
+donde m$_i$ es la pendiente de la línea recta que une los puntos:
+
+\begin{equation}
+m_i = \frac{f(x_{i+1}) - f(x_{i})}{x_{i+1} - x_{i}} \nonumber
+\end{equation}
+
+Estas ecuaciones se pueden usar para evaluar la función en cualquier punto entre $x_0$ y $x_n$ localizando primero el intervalo dentro del cual está el punto. Después se usa la ecuación adecuada para determinar el valor de la función dentro del intervalo. Este método es idéntico al de la interpolación lineal.
+
+\subsection*{Ejercicios}
+
+\begin{enumerate}
+	\setlength{\itemindent}{0.8cm}
+	
+\item \mbox{}
+Utilice el método de diferencias divididas de Newton lineal y el m\'etodo de Lagrange para interpolar el valor correspondiente a $x=1,8$ a partir de la siguiente tabla:
+
+%Empleando el método de diferencias divididas de Newton interpole linealmente para $x=0,5$. Calcule el error absoluto del valor obtenido
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline 
+X & 0.5 & 1 & 3 \\ 
+\hline 
+Y & 4 & 2 & 2/3 \\ 
+\hline 
+\end{tabular} 
+\centering
+\end{table}
+
+%Grafique el polinomio obtenido junto a los polinomios de Lagrange. Verifique sus resultados utilizando el método de interpolación de Newton.	
+	
+\item \mbox{}
+A partir de los puntos representados en la siguiente tabla se busca conocer un valor interpolado en $x=1,6$.
+
+\begin{table}[h]
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline 
+X & 1.00 & 1.25 & 1.50 & 1.75 & 2.00 & 2.25 & 2.50 \\ 
+\hline 
+Y & -4.50 & 2.48 & 1.79 & -4.47 & -6.00 & -0.22 & 14.70 \\ 
+\hline 
+\end{tabular}
+\centering 
+\end{table}
+
+\begin{itemize}
+\item[a)] Encuentre los polinomios de orden uno, dos y tres por el método de interpolación de Newton con diferencias hacia adelante e interpole el valor indicado.
+
+\item[b)] Exprese los polinomios de Newton de primer, segundo y tercer orden, con diferencias hacia atrás, e interpole el valor $x=2,3$.
+
+\item[c)] Utilice Matlab/Octave para hallar el polinomio de mayor grado posible identificando sus coeficientes. Interpolar para $x=1,6$.
+Verifique los resultados obtenidos en los incisos anteriores. Puede utilizar las funciones \textbf{polyfit} y \textbf{ polyval}. 
+
+\end{itemize}
+
+%\item \mbox{}
+%Dados los puntos de la siguiente tabla
+%
+%\begin{center}
+%\begin{tabular}[c]{|c|c|c|c|c|c|}
+%\hline
+%$x$ & 0 & 0.25 & 0.5 & 0.75 & 1 \\
+%\hline
+%$f(x)$ & 1 & 3 & 5 & 4.5 & 3 \\
+%\hline
+%\end{tabular}
+%\end{center}
+%
+%\begin{itemize}
+%	\item[{\bf a)}] ?`Cuál es el orden del polinomio interpolante para el cual el polinomio es único?
+%	
+%	\item[{\bf b)}] Obtenga dicho polinomio por medio del método de Vandermonde.
+%	
+%	\begin{itemize}
+%	\item[{\bf .}] Plantee matricialmente el sistema de ecuaciones que interpola al conjunto de puntos y obtenga el valor de los coeficientes.
+%	
+%	\item[{\bf .}] Grafique el polinomio resultante y verifique que interpola al conjunto de puntos. La función \verb"polyval" puede serle de utilidad.
+%	\end{itemize}
+%
+%\item[{\bf c)}] Vuelva a interpolar el conjunto de puntos anterior por medio el método de Lagrange.
+%	
+%	\begin{itemize}
+%		\item[{\bf .}] Calcule y grafique los polinomios $L_{n,i}(x)$, verifique que satisfacen la propiedad: $L_{n,i}(x_k) = 0$; $i \ne k$ y $L_{n,i}(x_i) = 1$.
+%	
+%		\item[{\bf .}]  Grafique el polinomio interpolante y observe que coincide con el del inciso {\bf a)}.
+%	\end{itemize}
+%	
+%	\item[{\bf d)}] Ahora, halle el polinomio interpolante por el método de Newton.
+%	
+%	\begin{itemize}
+%		\item[{\bf .}] Confeccione la tabla de diferencias divididas.
+%	
+%		\item[{\bf .}] Obtenga el polinomio, grafique y compare con lo obtenido con los m\'etodos anteriores.
+%	\end{itemize}
+%	
+%\end{itemize} \medskip
+\item \mbox{} 
+Programe en OCTAVE/MATLAB los m\'etodos de interpolación $a_1)$ Vandermonde, $a_2)$ Lagrange y $a_3)$ Newton dado un conjunto de $n$ puntos como entrada. La función \verb"conv" puede serle de utilidad.
+\begin{itemize}
+
+    \item[{\bf a)}] Dada la funci\'on $f(x)=|x|+x/2-x^2$, hallar una aproximaci\'on polin\'omica para la misma en el intervalo $\left[-1,1\right]$ con cada uno de los m\'etodos anteriores. Considere 4, 10, 20 y 80 puntos equiespaciados para obtener la interpolaci\'on.
+
+    \item[{\bf b)}] Grafique el polinomio de interpolaci\'on junto con la funci\'on $f(x)$ y observe qué pasa en cada caso.
+
+    \item[{\bf c)}] Utilice los comandos \textit{tic} y \textit{toc} para un n\'umero creciente de puntos a interpolar, y observe la eficiencia de los distintos algoritmos para una misma interpolaci\'on.
+\end{itemize}
+
+%newpage
+
+\item \mbox{}
+Aproxime la función $\displaystyle f(x)=\frac{2}{1+x^2}$ empleando algún método de interpolación obteniendo un polinomio:
+
+\begin{enumerate}
+
+\item de segundo grado utilizando los valores de $x:\{-5; 0; 5\}$ 
+\item de 4º grado utilizando dos valores de x intermedios, $\{-5; -2.5; 0; 2.5; 5\}$. 
+\item de 8º grado agregando más puntos intermedios. 
+\end{enumerate} 
+
+Grafique la función $f(x)$ y los polinomios obtenidos en forma superpuesta. ¿Obtuvo una mejor aproximación al aumentar el grado del polinomio? ¿Qué polinomio aproxima mejor, en este ejemplo, a la función? 
+
+\item \mbox{}
+Hemos visto tres m\'etodos o algoritmos distintos para encontrar el polinomio que interpola un conjunto de $n+1$ puntos $\left\{(x_0,y_0),(x_1,y_1),...(x_n,y_n)\right\}$.
+\begin{itemize}
+  \item[{\bf a)}] Analice si las siguientes afirmaciones son o no verdaderas y en cada caso explique por qu\'e:
+
+  \begin{itemize}
+	\item[{\bf .}] Los tres m\'etodos conducen al mismo polinomio interpolante.
+	
+    \item[{\bf .}] Por los distintos m\'etodos de interpolaci\'on debemos llegar a los mismos resultados num\'ericos.
+
+    \item[{\bf .}] Desde un punto de vista operacional algunos algoritmos resultan menos ventajosos que otros.
+ \end{itemize}
+
+ \item[{\bf b)}] Para cada uno de los m\'etodos mencionados, analizar el costo computacional (n\'umero de operaciones de punto flotante necesarias) para: el c\'alculo del polinomio interpolante $P_n(x)$; para su evaluaci\'on en un valor arbitrario $P_n(x_k)$; para agregar un punto m\'as a la interpolaci\'on.
+
+
+ \item[{\bf c)}] El polinomio de interpolaci\'on de Newton es de la forma
+\begin{eqnarray}
+P_n(x)=a_0+a_1(x-x_0)+a_2(x-x_0)(x-x_1)+...+a_n(x-x_0)(x-x_1)...(x-x_{n-1}), \nonumber
+\end{eqnarray}
+donde $a_i=f[x_0,x_1,...,x_i]$. Vea que esta expresi\'on puede ser reordenada y escribirse de la forma
+\begin{eqnarray}
+P_n(x)=(...((a_n(x-x_{n-1})+a_{n-1})(x-x_{n-2})+a_{n-2})(x-x_{n-3})+...+a_1)(x-x_0)+a_0. \nonumber
+\end{eqnarray}
+Compare la eficiencia computacional de una u otra expresi\'on al evaluar el polinomio, $P_n(x_k)$.
+\end{itemize}
+
+%\newpage
+
+%\item \mbox{} {\bf A cerca del error...}
+%\begin{itemize}
+%  \item[{\bf a)}] Si $M$ es el valor absoluto máximo de $f''(x)$ en el intervalo $[x_0, x_1]$, muestre que el error para la interpolación lineal de $f(x)$ usando $f(x_0)$ y $f(x_1)$ está acotado por $\frac{1}{8}M(x_1 - x_0)^2$ para $x_0 \leq x \leq x_1$.
+%
+%\item[{\bf b)}] Si se desea estimar el valor de $\sin(x)$ mediante una interpolación lineal de paso $h$, ¿qué valor debería tomar $h$ si el error en la interpolación debe mantenerse por debajo de $10^{-6}$?
+%
+%\item[{\bf c)}] El error calculado en b) es el que se conoce como \textit{error de truncamiento} y lo que se obtuvo es una estimaci\'on \textit{a priori} del mismo. Esta estimaci\'on, ¿depende del m\'etodo elegido para interpolar? ¿De q\'ue depende? ¿Incluye \textit{errores de redondeo}? ¿C\'omo espera que sea el valor del error \textit{a posteriori}? ¿Menor, igual o mayor?
+%\end{itemize}
+
+
+
+%\item \mbox{} {\bf Interpolaci\'on osculatoria}\\[5pt]
+%Supongamos que, al igual que en los ejercicios anteriores, contamos con $n+1$ puntos a interpolar, es decir, conocemos $(x_i,f(x_i))$ con $i=0,\dots,n$. A diferencia de esos casos, ahora vamos a buscar un polinomio de interpolaci\'on que no s\'olo pase por dichos puntos sino que en esos puntos tenga un determinado valor de derivada. O sea, dados $(x_i,f(x_i),f'(x_i))$, con $i=0,\dots,n$, buscamos $P_{k}(x)$, de grado $k$, tal que se cumpla $P_{k}(x_i)=f(x_i)$ y $P_{k}'(x_i)=f'(x_i)$, para todo valor de $i$. A este polinomio se lo conoce como \textit{polinomio interpolante osculatorio} o \textit{polinomio de Hermite}.
+%\begin{itemize}
+%\item[{\bf a)}] Plantee el sistema de ecuaciones matriciales que permite calcular el polinomio de interpolaci\'on que satisface $f(0)=0$, $f'(0)=1$, $f(2)=1$ y $f'(2)=-1$.
+
+%\item[{\bf b)}] ¿Cu\'al debe ser el grado $k$ del polinomio para que la soluci\'on, si existe, sea \'unica?
+
+%\item[{\bf c)}] La matriz del sistema resultante lleva el nombre de {\it matriz de Vandermonde confluente} (VC). Resuelva el sistema para obtener el polinomio en cuesti\'on y verifique que cumple con $f(x)$ y $f'(x)$ en $x_0,\cdots,x_n$.
+%\end{itemize}
+
+%Nuestro pr\'oximo objetivo ser\'a evitar resolver el sistema de ecuaciones anterior, ya que el n\'umero de operaciones escala como $(2n+1)^3$, y la matriz VC es en general, muy mal condicionada. Para ello:
+%	\begin{itemize}
+%		\item[{\bf d$_1$)}] Muestre que, siendo $f(x)$ una funci\'on continua en $[a,b]$ y $a<x_0\neq x_1<b$, existe un n\'umero $\xi\in(a,b)$ tal que se cumple $f[x_0,x_1]=f'(\xi)$. {\it \underline{Pista}}: Recurra al desarrollo de Taylor de $f(x)$ en torno a $x_0$. \textquestiondown A qu\'e equivaldr\'ia $f[x_0,x_0]$? Justifique adecuadamente.
+%		\item[{\bf d$_2$)}] Considere ahora el problema de buscar el polinomio de interpolaci\'on que satisfaga $P_3(x_i)=f(x_i)$ y $P_3'(x_i)=f'(x_i)$, $i=0,1$. Definimos la sucesi\'on de puntos $\{z_i\}_{i=0,\dots,3}$ de modo que $z_0=z_1=x_0$ y $z_2=z_3=x_1$. Muestre, utilizando el inciso anterior, que el polinomio buscado se puede escribir como
+%		\begin{equation}
+%		P_3(x)=f[z_0]+f[z_0,z_1](x-z_0)+f[z_0,z_1,z_2](x-z_0)(x-z_1)+f[z_0,z_1,z_2,z_3](x-z_0)(x-z_1)(x-z_2), \nonumber
+%		\end{equation}
+%		en donde $f[\cdot]$ denota la correspondiente diferencia dividida de Newton.
+		
+%\item[{\bf d$_3$)}] Generalice (intuitivamente) la idea anterior. Suponga que se busca $P_{2n+1}(x_i)=f(x_i)$ y $P_{2n+1}'(x_i)=f'(x_i)$, $i=0,\dots,n$. Defina la sucesi\'on $\{z_i\}_{i=0,\dots,2n+1}$ de modo tal que $z_{2i}=z_{2i+1}=x_i$ y defina el polinomio de interpolaci\'on basado en los $z_i$ y sus diferencias divididas.
+
+%		\item[{\bf d$_4$)}] Utilice la idea desarrollada para interpolar los puntos del inciso a) y verifique gr\'aficamente que se obtiene el mismo polinomio.
+%	\end{itemize}
+	
+\medskip
+
+\item \mbox{} {\bf Spline lineal}\\[5pt]
+Ajuste los datos de la tabla con trazadores de primer grado. Evalúe la función en x = 5.
+
+	\begin{center}
+		\begin{tabular}[c]{|c|c|c|c|c|}
+			\hline
+			$x$ & 3.0 & 4.5 & 7.0 & 9.0 \\
+			\hline
+			$f(x)$ & 2.5 & 1.0 & 2.5 & 0.5  \\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+\item \mbox{} {\bf Spline cúbico}\\[5pt]
+Ajuste los datos de la tabla con trazadores de tercer grado. Para ello utilice las funciones de MATLAB/OCTAVE \textbf{spline} y \textbf{ppval}. Evalúe la función en x = 2.25. Grafique los datos y el polinomio determinado. 
+
+	 	
+	\begin{center}
+		\begin{tabular}[c]{|c|c|c|c|c|c|c|}
+			\hline
+			$x$ & 1.6 & 2.0 & 2.5 & 3.2 & 4.0 & 4.5\\
+			\hline
+			$f(x)$ & 2.0 & 8.0 & 14.0 & 15.0  & 8.0 & 2.0\\
+			\hline
+		\end{tabular}
+	\end{center}	 	
+	 	
+%	\item[{\bf b)}] En este inciso volveremos recursivo el c\'alculo de los polinomios buscados. Si se supone $S_i(x)=a_i+b_i(x-x_i)+c_i(x-x_i)^2$, las inc\'ognitas ser\'an los coeficientes $a_i$, $b_i$ y $c_i$.
+%	\begin{itemize}
+%		
+%		\item[{\bf b$_1$)}] Plantee las condiciones que debe cumplir cada polinomio $S_i(x)$. \textquestiondown Qu\'e ventaja tiene esta forma de escribir $S_i$ respecto a la utilizada en el inciso a)?
+%
+%        \item[{\bf b$_2$)}] En base a lo anterior, muestre que se debe cumplir
+%		\begin{equation*}
+%		b_{i+1}=-b_i+2\frac{a_{i+1}-a_i}{x_{i+1}-x_i}.
+%		\end{equation*}
+%		\item[{\bf b$_3$)}]   Concluya en que los polinomios buscados son de la forma
+%		\begin{equation*}
+%		S_i(x)=f(x_i)+b_i(x-x_i)+\frac{b_{i+1}-b_i}{2(x_{i+1}-x_i)}(x-x_i)^2,
+%		\end{equation*}
+%		en donde los coeficientes $b_{i}$ cumplen la relaci\'on dada en b$_{2}$.
+%\item[{\bf b$_4$)}] Realice una funci\'on en OCTAVE/MATLAB que, en base a la tabla de puntos a interpolar, devuelva los coeficientes de los polinomios buscados. Proponga una condici\'on de arranque $b_0$. Implemente la evaluci\'on del polinomio y graf\'iquelo en todo su dominio.
+%	\end{itemize}
+%	\item[{\bf c)}] Un procedimiento similar se puede serguir para hallar, recursivamente, un trazador c\'ubico\footnote{Puede encontrar la demostraci\'on en: Burden, R.L. y Faires, J.D. {\bf Análisis Numérico}; Yang, W. Y.,
+%Cao W., Chung, T-S., Morris, J. {\bf Applied Numerical Methods Using MATLAB}}. En OCTAVE/MATLAB la funci\'on \verb"spline" permite encontrar un trazador c\'ubico con condiciones de frontera arbitrarias. Util\'icela junto con la funci\'on \verb"ppval" para hallar y graficar el trazador c\'ubico con condiciones de frontera libres de la tabla. Compare con lo hallado por usted en el inciso $b_4$.
+
+
+%\newpage
+
+\item \mbox{} {\bf Ejercicio libre} \\[5pt]
+En cada uno de los siguientes incisos proponga el m\'etodo de interpolaci\'on que crea m\'as adecuado para la situaci\'on propuesta.
+\begin{itemize}
+	\item[{\bf a)}] Un transistor posee las curvas de corriente de colector ($I_c$), en funci\'on de tensi\'on Colector-Emisor ($V_{ce}$), para diferentes valores de corriente de base ($I_b$), como se muestra en la figura. Si se pretende interpolar las diferentes curvas, \textquestiondown qu\'e m\'etodo de interpolaci\'on cree m\'as conveniente? \textquestiondown Por qu\'e? Desarrolle el m\'etodo propuesto si se quiere obtener una aproximaci\'on de $I_c$ para $V_{ce} = 2.5$ considerando $I_b=5$.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=12cm]{Curvas_transistor.eps}
+	\end{figure}
+\begin{center}
+		\begin{tabular}[c]{|c|c|c|c|c|c|}
+			\hline
+			$V_{ce}$ & 1 & 2 & 3 & 4 & 5\\
+			\hline
+			$I_b=1$ & 0.5623 & 0.6687 & 0.7401 & 0.7953 & 0.8409\\
+			\hline
+			$I_b=2$ & 0.8435 & 1.0031 & 1.1101 & 1.1929 & 1.2613\\
+			\hline
+			$I_b=3$ & 1.1247 & 1.3375 & 1.4802 & 1.5905 & 1.6818\\
+			\hline
+			$I_b=4$ & 1.4059 & 1.6719 & 1.8502 & 1.9882 & 2.1022\\
+			\hline
+			$I_b=5$ & 1.6870 & 2.0062 & 2.2202 & 2.3858 & 2.5227\\
+			\hline
+		\end{tabular}
+\end{center}
+	\medskip
+	
+\item[{\bf b)}]
+Se pretende obtener un polinomio que interpole los puntos de la figura mostrada de modo tal que represente de la mejor manera el contorno superior de la misma. \textquestiondown Qu\'e m\'etodo propondr\'ia? Justifique adecuadamente. Resuelva eligiendo distintos grados para el polinomio de interpolaci\'on y graf\'iquelo junto con los puntos de la figura. Analice los resultados. \underline{\textit{Nota}}: Los puntos se encuentran en \verb"puntos_pato.txt". Utilice las funciones \verb"load" o \verb"importdata" para leer los datos.
+
+	\begin{figure}[h]
+	\begin{center}
+	\includegraphics[scale=0.4]{Pato_puntos.eps}
+	\end{center}
+	\end{figure}
+\end{itemize}
+
+
+%\vspace{-0.7cm}
+%\item \mbox{} {\bf Whittaker--Shannon (Opcional)}\\[5pt]
+%Hasta ahora solo tratamos con funciones de interpolaci\'on polin\'omicas por una evidente raz\'on: son las funciones m\'as {\it tratables} para el c\'alculo posterior (como por ejemplo, derivar, integrar, etc.). Pero en ciertas aplicaciones, tal como el procesamiento digital de se\~nales, es conveniente el uso de polinomios de interpolaci\'on trigonom\'etricos. Definiendo a $sinc(x)=\frac{\sin(\pi x)}{\pi x}$, el polinomio de interpolaci\'on de  Whittaker--Shannon queda dado por
+%\begin{equation}
+%P(x)=\sum_{i=0}^{n}f(x_i)sinc\left( \frac{x-ih}{h} \right). \nonumber
+%\end{equation}
+%Calcule dicha funci\'on de interpolaci\'on considerando la tabla de puntos del {\bf Ej. 1}. \textquestiondown Qu\'e diferencias observa respecto de los otros m\'etodos de interpolaci\'on?
+
+%\item \mbox{}
+%Repita el {\bf Ej. 4} con una distribuci\'on de puntos de Chebyshev.
+%\medskip
+
+%{\bf Ej. 4: De Lagrange a Neville}\\[5pt]
+%Dada una funci\'on $f(x)$ cuyos valores son conocidos en $n+1$ puntos distintos $x_0,x_1,\dots,x_n$, el polinomio de interpolaci\'on de Lagrange resulta ser:
+%\begin{equation*}
+% P_n(x)=\sum_{i=0}^nL_{n,i}(x)f(x_i),\ \ \text{con}\ \ \ L_{n,i}(x)=\prod_{j=0,j\neq i}^n\frac{x-x_j}{x_i-x_j}.
+%\end{equation*}
+%Asimismo, puede mostrarse que el error de interpolaci\'on vendr\'a dado por:
+%\begin{equation*}
+%e(x)=f(x)-P_n(x)=\frac{f^{(n+1)}(\xi(x))}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
+%\end{equation*}
+%\begin{itemize}
+% \item[{\bf a)}] Obtenga el polinomio de interpolaci\'on considerando los puntos de la tabla. \textquestiondown Qu\'e sucede si se agrega un punto m\'as?
+%\begin{center}
+%\begin{tabular}[c]{|c|c|c|c|c|c|}
+%\hline
+%$x$ & 0 & 0.25 & 0.5 & 0.75 & 1 \\
+%\hline
+%$f(x)$ & 1 & 3 & 5 & 4.5 & 3 \\
+%\hline
+%\end{tabular}
+%\end{center}
+% \item[{\bf b)}] Si $M$ es el valor absoluto m\'aximo de $f''(x)$ en el intervalo $(x_0,x_1)$, muestre que el error para la interpolaci\'on lineal de $f(x)$ usando $f(x_0)$ y $f(x_1)$ est\'a acotado por $\frac{1}{8}M(x_1-x_0)^2$ para $x_0\leq x\leq x_1$. Si se desea calcular el valor de $sen(x)$ por una tabla de senos con paso $h$ usando interpolaci\'on lineal, \textquestiondown qu\'e valor deber\'ia tomar $h$ si el error en la interpolaci\'on debe mantenerse por debajo de $10^{-6}$?
+% \item[{\bf c)}*] Con la finalidad de volver m\'as sencillo el {\it engorroso} c\'alculo del polinomio interpolante de Lagrange, surge un m\'etodo denominado {\it m\'etodo de Neville}, que consiste en el c\'alculo del polinomio bas\'andose en dos aproximaciones de menor grado.
+%\begin{itemize}
+%\item[{\bf c$_1$)}]	Demuestre que, siendo $P^{(i)}(x)$ el polinomio de interpolaci\'on de Lagrange considerando los puntos \\ $x_0,\dots,x_{i-1},x_{i+1},\dots,x_n$, el polinomio de interpolaci\'on sobre todo el soporte vendr\'a dado por:
+%\begin{equation}
+% P_n(x)=\frac{(x-x_j)P^{(j)}(x)-(x-x_i)P^{(i)}(x)}{x_i-x_j}, \nonumber
+%\end{equation}
+%en donde $i\neq j$.
+%\item[{\bf c$_2$)}] Por comodidad en la notaci\'on, definimos $Q_{i,j}$ como el polinomio de interpolaci\'on considerando los puntos $x_{i-j},\dots,x_i$, con $0\leq j \leq i$. Si lo analiza con cuidado, notar\'a que el \'indice $j$ indica la cantidad de puntos tomados m\'as uno, y el \'indice $i$ desde que punto se toma. As\'i, por ejemplo, $Q_{i,0}=f(x_i)$. Muestre que
+%\begin{equation*}
+% Q_{i,j}=\frac{(x-x_{i-j})Q_{i,j-1}-(x-x_{i})Q_{i-1,j-1}}{x_i-x_{i-j}},
+%\end{equation*}
+%y, por ende, $P_n(x)=Q_{n,n}$. Obtenga el polinomio de Lagrange del inciso {\bf (a)} mediante el m\'etodo de Neville.
+%\item[{\bf c$_3$)}] Realice un programa en Matlab que calcule el polinomio de interpolaci\'on de Lagrange mediante el m\'etodo de Neville. Considere que las entradas de la funci\'on sean los puntos del soporte y sus respectivos valores de ordenada, y la salida los coeficientes del polinomio. Recuerde los comandos \verb conv  y \verb polyval , pueden serle de utilidad
+%\end{itemize}
+%\end{itemize} \medskip
+
+%{\bf Ej. 6: Parametrizando} \\ [5pt]
+%Una aplicaci\'on concreta de los m\'etodos de interpolaci\'on vistos es la de la aplicaci\'on a la interpolaci\'on de curvas param\'etricas, es decir, curvas para las cuales un mismo valor de abscisa puede corresponder a m\'as de un valor de ordenada. Estas curvas se representan con la variaci\'on de un par\'ametro $t$ de modo que la curva queda definida por $(x(t),f(x(t)))$. Por ende, para interpolar esta clase de curvas ser\'a necesario conocer, adem\'as de pares de pares ordenados $(x_i,f(x_i))$ por donde pasa la curva, los valores que toma el par\'ametro en esos casos.
+%\begin{itemize}
+% \item Interpole los puntos que se muestran en la tabla. Para ello considere dos polinomios de interpolaci\'on de Lagrange, uno considerando $t$ y $x(t)$ y otro considerando $t$ y $f(x(t))$. Grafique. Cambie el vector $t$ por $[0,0\text{.}1,0\text{.}2,0\text{.}4,0\text{.}8,1\text{.}6,2\text{.}4]$. \textquestiondown Qu\'e cambios se producen? \textquestiondown Qu\'e influencia tiene el vector $t$ sobre el polinomio resultante? Justifique.
+%\begin{center}
+%\begin{tabular}[c]{|c|c|c|c|c|c|c|c|}
+%\hline
+%$t$ & 0 & 0\text{.}25 & 0\text{.}5 & 0\text{.}75 & 1 & 1\text{.}25 & 1\text{.}5\\
+%\hline
+%$x(t)$ & 1 & 2\text{.}5 & 6 & 6\text{.}5 & 6 & 5\text{.}5 & 7\text{.}5\\
+%\hline
+%$f(x(t))$ & 1 & 3 & 5 & 4\text{.}5 & 3 & 2 & 1\\
+%\hline
+%\end{tabular}
+%\end{center}
+%\end{itemize}
+
+\end{enumerate}
+\end{document}

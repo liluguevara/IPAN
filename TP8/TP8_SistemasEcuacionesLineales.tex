@@ -1,0 +1,541 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage[a4paper]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage{subfigure}
+%\usepackage{enumitem}
+\usepackage{textcomp}
+\usepackage{listings}
+\lstset{language=Matlab, breaklines=true, basicstyle=\footnotesize}
+%\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=2pt}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\renewcommand{\labelitemi}{$\bullet$}
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 9: Sistemas de Ecuaciones Lineales.}}\\
+\rule{17cm}{1pt}
+\bigskip
+\end{center}
+{\bf Ej. 1: M\'etodos directos: Eliminaci\'on Gaussiana{/} Método de Gauss-Jordan. Pivoteo Parcial}
+\begin{itemize}
+\item[{\bf a)}] Considere los siguientes sistemas de ecuaciones $Ax=b$, donde
+\[
+A_1=
+  \begin{bmatrix}
+    0 & 1  & -1 \\
+    2 & -1 & -1 \\
+    1 & 1  & -1
+  \end{bmatrix},
+b_1=
+\begin{bmatrix}
+ 2 \\
+ 0 \\
+ 1
+\end{bmatrix}
+\]
+\[
+A_2=
+  \begin{bmatrix}
+    1 &  0 & 1 \\
+    1 &  1 & 1 \\
+    1 & -1 & 1
+  \end{bmatrix},
+b_2=
+\begin{bmatrix}
+ 2 \\
+ 3 \\
+ 1
+\end{bmatrix}.
+\]
+\begin{itemize}
+
+ \item[i.] Para ambos sistemas, calcule el determinante de $A$ haciendo uso de la función {\ttfamily det()} de MATLAB/OCTAVE. ?`Qu\'e puede decir del sistema $A_2$?
+
+ \item[ii.] ?`Para cu\'al de los sistema puede asegurar la existencia de una soluci\'on \'unica? Resuelva el sistema de ecuaciones mediante eliminación Gaussiana con \textit{pivoteo parcial}.
+
+%\item[iii.] Realice un programa en MATLAB/OCTAVE que resuelva un sistema de ecuaciones mediante el m\'etodo de eliminaci\'on \textit{Gaussiana}.
+
+%\item[iV.] ?`Cu\'antas operaciones de punto flotante realiza este algoritmo para hallar la soluci\'on a $Ax=b$ si la matriz del sistema de $N\times N$ es no-singular? Compare con las necesarias para hallar la soluci\'on mediante el c\'alculo expl\'icito de $A^{-1}$. Recordar que $A^{-1}=\frac{[Adj(A)]^T}{det(A)}$ donde $Adj(A)$ es la matriz adjunta.
+\end{itemize}
+
+\item[{\bf b)}] {\bf Estimaci\'on a-priori del error. An\'alisis perturbativo}:
+
+Dado el sistema $Ax = b$, suponga que el t\'ermino $b$ se perturba por una cantidad $\delta b$.
+
+
+\noindent El efecto de la perturbaci\'on sobre la soluci\'on ser\'a $x + \delta x$, con $\delta x$ acotada por
+\begin{equation*}
+ \frac{\parallel \delta x\parallel}{\parallel x\parallel }\leq cond(A)\frac{\parallel \delta b \parallel}{\parallel b\parallel}
+\end{equation*}
+
+\noindent Si la matriz $A$ es la que es perturbada por una cantidad $\delta A$, el efecto de tal perturbaci\'on sobre la soluci\'on ser\'a $x + \delta x$ con $\delta x$ acotada por
+\begin{equation*}
+ \frac{\parallel \delta x\parallel}{\parallel x+\delta x\parallel }\leq cond(A)\frac{\parallel \delta A \parallel}{\parallel A\parallel}
+\end{equation*}
+
+\noindent Inspeccione la funci\'on {\ttfamily cond()} de MATLAB/OCTAVE. Calcule los valores de {\ttfamily cond(A1)} y {\ttfamily cond(A2)}. ?`Qu\'e indican estos resultados?
+
+
+
+%\item[{\bf c)}] El sistema
+%\[
+%\begin{bmatrix}
+%0.0003 & 1.566 \\
+%0.3454 & -2.436
+%\end{bmatrix}
+%\begin{bmatrix}
+%x_1 \\ x_2
+%\end{bmatrix}
+%=
+%\begin{bmatrix}
+%1.569 \\ 1.018
+%\end{bmatrix},
+%\]
+%tiene soluci\'on exacta dada por $x=[10$,$1]^t$. Utilice la aritm\'etica de decimal de cuatro d\'igitos para resolverlo sin y con estrategia de pivoteo parcial. Indique el porque de la diferencia en las soluciones num\'ericas obtenidas.
+
+\item[{\bf c)}] Sean los sistemas de ecuaciones $Ax=b$ determinados por:
+\[
+A_1=
+  \begin{bmatrix}
+    10^{-15} & 1      \\
+    1        & 10^{11}
+  \end{bmatrix},
+A_2=
+\begin{bmatrix}
+    10^{-14.6} & 1      \\
+    1        & 10^{15}
+\end{bmatrix},
+A_3=
+\begin{bmatrix}
+    10^{15} & 1      \\
+    1      & 10^{-14.6}
+\end{bmatrix}
+\]
+y
+\[
+b_1=
+\begin{bmatrix}
+ 1+10^{-15} \\
+ 10^{11}+1
+\end{bmatrix},
+b_2=
+\begin{bmatrix}
+ 1+10^{-14.6} \\
+ 10^{15}+1
+\end{bmatrix},
+b_3=
+\begin{bmatrix}
+ 10^{15}+1 \\
+ 1+10^{-14.6}
+\end{bmatrix}.
+\]
+
+\noindent Calcule los determinantes de las matrices $A$ para cada sistema. Conociendo los determinantes de dichas matrices y sin resolver los sistemas, ?`qu\'e puede decir de las soluciones de los mismos? ?`Qu\'e puede decir a partir del n\'umero de condici\'on?
+
+
+%\item[{\bf e)}] Se sabe que que la soluci\'on de los sistemas del inciso anterior es $x=[1,$ $1]$. Utilice las estrategias de \textit{pivoteo parcial escalado} y \textit{pivoteo total}, seg\'un sea conveniente, para aproximar la solución de dichos sistemas. ?`Qu\'e observa? ?`Qu\'e conclusiones puede sacar de dichos resultados acerca de estas estrategias?
+
+%\item[{\bf f)}] La matriz de {\bf Hilbert} $\mathcal{H}$ representa la solución al problema de {\bf aproximación por mínimos cuadrados}, que estudiaremos en la {\bf Unidad 5}. La misma es de la forma
+%\begin{equation*}
+%\mathcal{H}=[h_{mn}]=\frac{1}{m+n-1}
+%\end{equation*}
+%Genere una funci\'on en MATLAB/OCTAVE que genere una matriz $\mathcal{H}$ arbitraria de dimensi\'on $M\times N$ y calcule el n\'umero de condici\'on para aquellas que resultan cuadradas. Grafique {\ttfamily cond(H)} en funci\'on de $N=1\dots 12$.
+
+%\item[{\bf g)}] Considere el sistema de ecuaciones dado por
+%\[
+%\begin{bmatrix}
+%-1 & -2 & 2  \\
+%1  &  1 & -1 \\
+%1  &  2 & -1 \\
+%\end{bmatrix}
+%\begin{bmatrix}
+%x_1 \\ x_2 \\ x_3
+%\end{bmatrix}
+%=
+%\begin{bmatrix}
+%-1 \\ 1 \\ 2
+%\end{bmatrix}.
+%\]
+
+%\begin{itemize}
+% \item[i.] Construya la matriz aumentada para dicho sistema y resuelva utilizando el m\'etodo de \textit{Gauss-Jordan}.
+
+% \item[ii.] Modifique el programa desarrollado en el inciso a) para encontrar las soluciones a un sistema de ecuaciones mediante el m\'etodo de \textit{Gauss-Jordan}.
+%\end{itemize}
+\end{itemize}
+\medskip
+\vspace{2cm}
+{\bf Ej. 2: Factorizaci\'on \textit{LU}}
+
+\begin{itemize}
+
+\item[{\bf a)}] Encuentre algebraicamente la factorizaci\'on $PA = LU$ de las siguientes matrices:
+\[
+A=
+  \begin{bmatrix}
+    1  & 2 & -1 \\
+    3  & 6 &  2 \\
+    -1 & 1 & 4
+  \end{bmatrix},
+B=
+  \begin{bmatrix}
+    0 & 1 & 4 \\
+    -1 & 2 & 1 \\
+    1 & 3 & 3
+  \end{bmatrix}.
+\]
+\item[{\bf b)}] De las líneas de código proporcionadas al final de la práctica, utilice las necesarias para implementar como función la resolución de un sistema de ecuaciones lineal $Ax=b$ mediante factorizaci\'on \textit{LU} y sustitución hacia adelante y hacia atrás. El programa debe devolver como variables de salida las matrices $L$, $U$, $P$ y el vector soluci\'on $x$.	
+\item[{\bf c)}] Utilizando el programa implementado en el inciso anterior, encuentre la factorizaci\'on \textit{LU} y la soluci\'on de los sistemas de ecuaciones $Ax=b$ para las matrices de coeficientes:
+\[
+A_1=
+  \begin{bmatrix}
+    0 & 1 & 2 \\
+    1 & 2 & 3 \\
+    2 & 3 & 2
+  \end{bmatrix},
+%\]
+%\[
+A_2=
+  \begin{bmatrix}
+    2 & 1 & 0 \\
+    0 & 3 & 2 \\
+    1 & 2 & 4
+  \end{bmatrix},
+%\]
+%\[
+A_3=
+  \begin{bmatrix}
+    1 & 2 & 1 \\
+    2 & 0 & -2 \\
+    -1 & 2 & 3
+  \end{bmatrix}
+\]
+y
+\[
+b_1=
+  \begin{bmatrix}
+    2 \\
+    4 \\
+    5
+  \end{bmatrix},
+b_2=
+  \begin{bmatrix}
+    4 \\
+    12 \\
+    17
+  \end{bmatrix},
+b_3=
+  \begin{bmatrix}
+   1 \\
+   -2 \\
+   3
+  \end{bmatrix}
+\]
+%\item[{\bf d)}] Sea la siguiente matriz sim\'etrica, definida positiva,
+%\[
+%A=
+%  \begin{bmatrix}
+%    38 & 3  & 4  & 6  & 5 \\
+%    3  & 48 & 6  & 7  & 7 \\
+%    4  & 6  & 52 & 1  & 6 \\
+%    6  & 7  & 1  & 56 & 10 \\
+%    5  & 7  & 6  & 10 & 74
+%  \end{bmatrix}
+%\]
+%\begin{itemize}
+% \item[i.] Desarrolle un programa en MATLAB/OCTAVE que ejecute una factorizaci\'on de \textit{Cholesky}.
+% \item[ii.] Resolver los sistemas de ecuaciones $Ax = b$ donde
+%\[
+%b_1=
+%  \begin{bmatrix}
+%    56 \\
+%    71 \\
+%    69 \\
+%    80 \\
+%    102
+%  \end{bmatrix},
+%b_2=
+%  \begin{bmatrix}
+%    112 \\
+%    142 \\
+%    138 \\
+%    160 \\
+%    204
+%  \end{bmatrix},
+%b_3=
+%  \begin{bmatrix}
+%    168 \\
+%    213 \\
+%    207 \\
+%    240 \\
+%    306
+%  \end{bmatrix}
+%\]
+%\end{itemize}
+\item[{\bf d)}] MATLAB/OCTAVE cuenta con una función predefinida que permite obtener la descomposición LU. La expresión \textbf{lu(A)} devuelve las matrices L y U o L, U y P, dependiendo de la cantidad de argumentos de salida explicitados. Utilice la función predefinida para verificar las descomposiciones realizadas y mediante \textbf{y = L$\backslash$(P*b)} y \textbf{x = U$\backslash$y} determine el vector soluci\'on $x$. Compare con los resultados del inciso c). Las diferencias obtenidas, ?`a qu\'e considera que pueden deberse?
+\item[{\bf e)}] Sea la siguiente matriz tri-diagonal $A$:
+\[
+A=
+  \begin{bmatrix}
+    2  & 2 & 0 & 0 & 0 & 0 \\\
+    1  & 5 & 4 & 0 & 0 & 0  \\
+    0  & 4 & 8 & 4 & 0 & 0  \\
+    0  & 0 & 6 & 8 & 6 & 0  \\
+    0  & 0 & 0 & 6 & 4 & 3  \\
+    0  & 0 & 0 & 0 & 4 & 9
+  \end{bmatrix}
+\]
+\begin{itemize}
+ \item[i.] Realice una función para su resolución que explote la naturaleza tri-diagonal de la matriz, reduciendo as\'i el n\'umero de operaciones. \textbf{Ayuda}: revise la página 306 del libro Métodos numéricos para ingenieros, Chapra - Canale, Quinta edición.
+ \item[ii.] Resolver los sistemas de ecuaciones $Ax = b$ donde
+\[
+b_1=
+  \begin{bmatrix}
+    4 \\
+    10 \\
+    16 \\
+    20 \\
+    13 \\
+    13
+\end{bmatrix},
+b_2=
+  \begin{bmatrix}
+    8  \\
+    20 \\
+    32 \\
+    40 \\
+    26  \\
+    26
+  \end{bmatrix},
+b_3=
+  \begin{bmatrix}
+    12 \\
+    30 \\
+    48 \\
+    60 \\
+    39 \\
+    39
+  \end{bmatrix}
+\]
+\end{itemize}
+\end{itemize}
+\medskip
+{\bf Ej. 3: M\'etodos iterativos: Gauss-Seidel y Jacobi.}
+
+\noindent M\'etodo de Jacobi: dada $A$ de $n\times n$ con elementos diagonales no nulos. A partir de un vector $\textbf{x}^{(0)}$ de orden $n$, se obtiene el vector soluci\'on de forma iterativa. Es decir, para $k= 0, 1, 2, ...$
+
+\begin{equation} 
+x_{i}^{(k)} = \frac{- \sum_{j=1 \atop j \neq i}^{n}a_{ij} x_{j}^{k-1} + b_{i}}{a_{ii}}, \quad \textsl{para i = 1, ... n} \nonumber 
+\end{equation} 
+
+\noindent M\'etodo de Gauss-Seidel: dada $A$ de $n\times n$ con elementos diagonales no nulos. A partir de un vector $\textbf{x}^{(0)}$ de orden $n$, se obtiene el vector soluci\'on de forma iterativa. Es decir, para $k= 0, 1, 2, ...$
+
+\begin{equation} 
+x_{i}^{(k)} = \frac{- \sum_{j=1}^{i-1}a_{ij} x_{j}^{k} -\sum_{j=i+1}^{n}a_{ij}x_{j}^{(k-1)} + b_{i}}{a_{ii}}, \quad \textsl{para i = 1, ... n} \nonumber 
+\end{equation} 
+
+En general como una primera aproximaci\'on suele tomarse el vector nulo, es decir, $\textbf{x}^{(0)}=0$. Adem\'as, como todo m\'etodo iterativo necesitan de un criterio de corte para las iteraciones. Utilizaremos $\frac{||\textbf{x}^{(k)}-\textbf{x}^{(k-1)}||}{||\textbf{x}^{(k)}||} < \epsilon$, para una cierta tolerancia $\epsilon$ preestablecida. 
+
+
+\begin{itemize}
+
+\item[{\bf a)}] Realice un programa en MATLAB/OCTAVE que permita resolver un sistema de ecuaciones del tipo $Ax=b$ mediante
+
+ \begin{itemize}
+  \item[i.] El m\'etodo iterativo de \textit{Jacobi}.
+  \item[ii.] El m\'etodo iterativo de \textit{Gauss-Seidel}.
+\end{itemize}
+\item[{\bf b)}] Utilice los programas desarrollados en el inciso anterior para resolver el sistema:
+\[
+\begin{bmatrix}
+3 & 2   \\
+1 & 2
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 \\ -1
+\end{bmatrix}.
+\]
+cuya soluci\'on \'unica esta dada por $x=[1,-1]^T$
+\item[{\bf c)}] Considere una barra de metal de $10$~m de longitud que es sometida a una fuente de calor en un extremo por un tiempo determinado. Al cabo de ese tiempo, la fuente de calor cesa y se miden temperaturas de $10^{\circ}$C y $200^{\circ}$C en ambos extremos. Se desea encontrar la temperatura en los puntos intermedios $x_1$, $x_2$, $x_3$ y $x_4$ ubicados a $2$~m equidistantes unos de otros. Asumiendo que la temperatura en cada punto es el promedio de las temperaturas medidas en los puntos vecinos,
+\begin{itemize}
+ \item[i.] Escriba el sistema de ecuaciones $Ax=b$ que representa el problema en cuesti\'on.
+ \item[ii.] Encuentre las temperaturas en cada punto utilizando los m\'etodos de \textit{Jacobi} y \textit{Gauss-Seidel} programados en el inciso \textit{a}.
+\end{itemize}
+\item[{\bf d)}] Considere el sistema de ecuaciones dado, con soluci\'on exacta $x=(1,1)$:
+\[
+\begin{bmatrix}
+1 & -5   \\
+7 & -1
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+-4 \\ 6
+\end{bmatrix}.
+\]
+
+\begin{itemize}
+ \item[i.] Utilizando la aproximaci\'on inicial $(x_1,x_2)=(0,0)$, resuelva el mismo sistema mediante los m\'etodos de \textit{Gauss-Seidel} y \textit{Jacobi}.
+ \item[ii.] ?`Qu\'e puede decir de la convergencia de estos m\'etodos en este caso? ?`Por qu\'e ocurre este fen\'omeno.
+\end{itemize}
+\item[{\bf e)}] Sean los siguientes sistemas de ecuaciones:
+\[
+\begin{bmatrix}
+3.8  & 1.6 & 0.9   \\
+-0.7 & 5.4 & 1.6   \\
+1.5 & 1.1 & 3.2
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+15.5 \\ 10.3 \\ 3.5
+\end{bmatrix},
+\begin{bmatrix}
+1  & 0 & 1   \\
+-1 & 1 & 0   \\
+1  & 2 & -3
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+4 \\ 1 \\ -4
+\end{bmatrix}.
+\]
+y
+\[
+ \begin{bmatrix}
+1  & 0.5 & 0.5   \\
+0.5 & 1 & 0.5   \\
+0.5 & 0.5 & 1
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+2 \\ 2 \\ 2
+\end{bmatrix}.
+\]
+\begin{itemize}
+ \item[i.] Resuelva los sistemas de ecuaciones dados utilizando los m\'etodos de \textit{Gauss-Seidel} y \textit{Jacobi}. ?`Qu\'e puede decir de la convergencia de estos m\'etodos para los sistemas dados?
+ %\item[ii.] Calcule el radio espectral $\rho(T)$ de las matrices $A_{1,2,3}$ para ambos m\'etodos y haga un an\'alisis de la convergencia (o divergencia) para los sistemas dados. \underline{\textit{Ayuda}}:
+ %\begin{eqnarray*}
+ %T_{J}&=&D^{-1}(L+U)\\
+ %T_{GS}&=&(D-L)^{-1}U
+ %\end{eqnarray*}Donde $A=D-L-U$, con $D$ la matriz diagonal formada con los elementos de la diagonal principal de $A$ y ceros en los dem\'as
+%elementos, $-L$ la matriz estrictamente triangular inferior formada con los elementos de $A$ situados bajo la diagonal principal y $-U$ la matriz estrictamente triangular superior formada con los elementos situados por arriba de la diagonal principal.
+\item[ii.]  Los elementos de la diagonal de la matriz nos proporcionan un criterio suficiente pero no necesario de convergencia. Si el elemento de la diagonal en m\'odulo es mayor a la suma de los m\'odulos de los dem\'as elementos de la fila, es decir, si se cumple:
+\begin{equation}
+|a_{i,i}| > \sum_{j=1 \atop j \neq i }^{n} |a_{i,j}| \nonumber
+\end{equation}
+la convergencia est\'a garantizada \footnote{Notar que al ser un criterio suficiente pero no necesario, los m\'etodos pueden converger a\'un cuando no se cumpla, pero la convergencia estar\'a garantizada cuando la condici\'on se satisfaga.}. Calcule dicho criterio para las matrices del inciso anterior.
+\end{itemize}
+\end{itemize}
+
+%{\bf Ej. 3: Estimaci\'on a-posteriori del error.}
+%\begin{itemize}
+%\item[{\bf a)}] Sabiendo que la exactitud de la soluci\'on calculada depende del numero de condici\'on de la matriz seg\'un la expresi\'on:
+%\begin{equation*}
+% \frac{\parallel x-\hat{x}\parallel}{\parallel x\parallel }\leq cond(A)\frac{\parallel b-A\hat{x}\parallel}{\parallel b\parallel}
+%\end{equation*}
+%Dado el sistema de ecuaciones:
+% \[
+%\begin{bmatrix}
+%0.89 & 0.53   \\
+%0.47 & 0.28
+%\end{bmatrix}
+%\begin{bmatrix}
+%x_1 \\ x_2
+%\end{bmatrix}
+%=
+%\begin{bmatrix}
+%0.36 \\ 0.19
+%\end{bmatrix}.
+%\]
+%\begin{description}
+% \item[i] Considerando que una soluci\'on aproximada $\hat{x}=(-11.5,20)$, calcule el vector residual $r=b-A\hat{x}$ y el error relativo si la soluci\'on exacta es $x=(1,-1)$.
+%\end{description}
+%\end{itemize}
+\newpage
+
+\noindent Líneas de c\'odigo para la factorizaci\'on $LU$ con pivoteo y para la resolución del sistema de ecuaciones por sustituci\'on:
+\begin{lstlisting}[language=Matlab]
+% factorizacion PA = LU
+% y resolucion del sistema mediante sustitucion hacia adelante y hacia atras
+clc; clear; close all;
+
+M = load('matriz.dat');
+n = length(M(:,1));
+A = M(:,1:3);
+b = M(:,4);
+P = eye(n);
+L = eye(n);
+U = zeros(n);
+
+% permutacion de la matriz a:
+% la permutacion se realiza mirando el maximo abs(value) por columna
+for i = 1: n-1
+  [val_a, index_a] = max(abs(A(i:n,i)));
+  
+  if(abs(val_a) <= 1E-8)
+    disp('elemento nulo en la diagonal')
+    stop
+  else
+    A([i index_a+i-1],:) = A([index_a+i-1,i], :);
+    P([i index_a+i-1],:) = P([index_a+i-1,i],:);
+   
+  endif
+endfor 
+
+U(1,:) = A(1,:);
+L(:,1) = A(:,1)./U(1,1);
+
+for i = 2: n-1;
+  U(i,i) = A(i,i) - sum((L(i,1:i-1))'.*U(1:i-1,i));
+  for j = i+1: n;
+    U(i,j) = A(i,j)-sum((L(i,1:i-1))'.*U(1:i-1,j));
+    L(j,i) = 1/U(i,i)*(A(j,i)-sum((L(j,1:i-1))'.*U(1:i-1,i)));
+  endfor
+endfor
+  
+U(n,n) = A(n,n) - sum((L(n,1:n-1))'.*U(1:n-1,n));
+
+% sustitución hacia adelante
+
+b = P*b;
+for i = 2: n
+  suma = b(i);
+    for j =1: i-1
+      suma = suma - L(i,j)*b(j);
+    end
+    b(i) = suma;
+end
+  
+% sustitución hacia atrás
+
+x(n)  = b(n)/U(n,n);
+for i = n-1: -1: 1
+  suma = 0;
+  for j = i + 1: n
+    suma = suma + U(i,j)*x(j);
+  end
+  x(i) = (b(i) - suma)/U(i,i);
+end
+\end{lstlisting}
+
+\end{document}

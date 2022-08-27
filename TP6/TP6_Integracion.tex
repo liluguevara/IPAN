@@ -1,0 +1,346 @@
+\documentclass[10pt,a4paper,twoside,spanish]{article}	%Indica la clase de documento
+
+\pagestyle{plain}
+\usepackage{latexsym}
+\usepackage[spanish]{babel} 				%Division de silabas en español.
+\usepackage{ucs}
+
+\usepackage[latin1]{inputenc} 				%Para poner acentos directamente
+\usepackage[T1]{fontenc}
+
+\usepackage[dvips]{graphicx}   				 %Insertar figuras .eps
+\DeclareGraphicsExtensions{.bmp,.png,.pdf,.jpg}
+
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel}  %Comandos especiales
+\newcommand{\sen}{\mathop{\rm sen}\nolimits}            %seno
+\newcommand{\arcsen}{\mathop{\rm arcsen}\nolimits}
+\newcommand{\arcsec}{\mathop{\rm arcsec}\nolimits}
+\def\max{\mathop{\mbox{\rm m\?ax}}}			 %mx
+\def\min{\mathop{\mbox{\rm m\?{\i}n}}}			 %mn
+\usepackage[table]{xcolor} 				%Para poner color en las tablas
+\usepackage{float}
+\setlength\unitlength{1mm}
+
+%*************** Agregados de formato********************
+%\usepackage{shortlst}					% Intems cortos
+\usepackage{multicol}					% Permite dividir en columnas
+\usepackage{wrapfig}					% Texto al lado de las figuras
+\usepackage[rftl]{floatflt}
+\usepackage{rotating}					% Rotar elementos
+\usepackage{subfig}					% Subfiguras
+\usepackage{anysize}					% Configurar margenes
+\marginsize{2 cm}{2 cm}{1 cm}{2 cm}
+\usepackage{multirow}
+\usepackage[a4paper]{geometry}
+%************************************************************
+
+%************************************************************
+% Define un comando para formatear y contar los ejercicios
+
+\newcounter{contador}			% Se crea un contador
+\setcounter{contador}{1}
+\newcommand{\ej}{\subsection*{Ejercicio \thecontador} \stepcounter{contador} }
+
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\begin{document}
+\begin{center}
+\large{{\bf Introducci\'on a la Programaci\'on y An\'alisis Num\'erico\\[5pt] A\~no 2022}}\\[5pt]
+\large{{\bf Pr\'actica 6: Integraci\'on Num\'erica}}\\
+\rule{17cm}{1pt}
+
+\bigskip
+\end{center}
+
+\section*{F\'ormulas de integraci\'on num\'erica.}
+Definiremos a continuaci\'on las reglas de integraci\'on que veremos en este curso. Para las mismas necesitamos que: 
+
+\begin{itemize}
+\item $f$ sea una funci\'on suave sobre el intervalo cerrado $[a,b]$.
+\item El intervalo $[a,b]$ est\'a subdividido en $n$ subintervalos de longitud $h = (b-a)/n$.
+\item Se tendr\'an $n+1$ puntos equiespaciados $x_{i} = x_{0}+ih$ para $i=0, 1, ..., n$, donde $x_{0} = a$ y $x_{n} = b$. 
+\end{itemize}
+Luego, las reglas de integraci\'on con sus respectivos t\'erminos de error (siendo $\xi$ un punto del intervalo $(a,b)$) son:
+
+\subsection*{Regla del rect\'angulo}
+\begin{equation}
+\int_{a}^{b} f(x) dx = h \sum_{i=1}^{n}f(x_{i-1}) + \frac{h(b-a)}{2}f'(\xi). \nonumber
+\end{equation}
+
+\subsection*{Regla del trapecio simple}
+
+\begin{equation}
+\int_{a}^{b} f(x) dx = (b-a) \frac{ f(x_{0}) + f(x_{n})}{2} - \frac{(b-a)^{3}}{12} f''(\xi). \nonumber
+\end{equation}
+
+\subsection*{Regla del trapecio compuesta}
+
+\begin{equation}
+\int_{a}^{b} f(x) dx = \frac{h}{2} \big ( f(x_{0}) + f(x_{n}) + 2\sum_{i=1}^{n-1}f(x_{i}) \big ) - \frac{h^{2}(b-a)}{12} f''(\xi). \nonumber
+\end{equation}
+
+\subsection*{Regla de Simpson 1/3 simple}
+
+\begin{equation}
+\int_{a}^{b} f(x) dx = \frac{(b-a)}{6} \big ( f(x_{0} + 4f((a+b)/2)) +f(x_{n})\big )  - \frac{h^{5}}{90}f^{(4)}(\xi). \nonumber
+\end{equation}
+
+\subsection*{Regla de Simpson 1/3 compuesta}
+
+\begin{equation}
+\int_{a}^{b} f(x) dx = \frac{h}{3} \big ( f(x_{0}) + f(x_{n}) + 2\sum_{i=1}^{(n/2)-1}f(x_{2i})+4\sum_{i=1}^{n/2}f(x_{2i-1}) \big) - \frac{h^{4}(b-a)}{180}f^{(4)}(\xi). \nonumber
+\end{equation}
+
+\subsection*{Cuadratura de Gauss-Legendre}
+Si $x_{1}, x_{2}, .... x_{n}$ son las $n$ ra\'ices del polinom\'io de Legendre de grado $n$, la f\'ormula de cuadratura de Gauss-Legendre de $n$ puntos para estimar la integral de una funci\'on $f$ sobre el intervalo $[-1,1]$ est\'a dada por:
+\begin{equation}
+\int_{-1}^{1} f(x)dx \approx \sum_{1}^{n} A_{i}f(x_{i}),\quad \textnormal{donde:} \quad A_{i} = \int_{-1}^{1} \prod_{j=1}^{n} \frac{(x-x_{j})}{(x_{i}-x_{j})}dx. \nonumber
+\end{equation}
+
+El error de truncamiento est\'a dado por $E(f)=c_{n}f^{(2n)}(\xi)$, donde $\xi$ es un punto del intervalo $(-1,1)$ y $c_{n}$ es una constante. Esta f\'ormula de integraci\'on es exacta para todo polinomio de grado $\leq 2n -1$. \par
+Como se puede observar, el c\'alculo de la integral dada por las f\'ormulas de cuadratura de Gauss-Legendre es en el intervalo de integraci\'on $(-1,1)$. Luego, si $b > a$, el cambio de variable $t=\frac{2x-(b+a)}{(b-a)}$ permite evaluar la integral en el intervalo $(a,b)$:
+\begin{equation}
+\int_{a}^{b}f(x)dx = \int_{-1}^{1} \phi (t) dt, \quad \textnormal{donde:} \quad \phi (t) = \frac{1}{2}(b-a)f \big ( \frac{1}{2}(b-a)t + \frac{1}{2}(b+a) \big ). \nonumber
+\end{equation}    
+\vspace{1 cm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ej Implemente mediante funciones las reglas del rect\'angulo, del trapecio y de Simpson arriba definidas. Dadas las siguientes integrales:
+\begin{multicols}{2}
+ $$1) \; \;\int_0^1 {\frac{1}{1+x^2}}dx$$
+ 
+ $$2) \;\; \int_1^2{\frac{2x+1}{x^2+x}}dx$$
+\end{multicols}
+\begin{itemize}
+\item[a)] Aproximar su valor empleando la regla trapezoidal simple. Acote el error cometido.
+\item[b)] Aproximar su valor empleando la regla de Simpson simple. Acote el error cometido. 
+\item[c)] Grafique y compare las aproximaciones realizadas en los incisos anteriores. Puede utilizar el siguiente código como referencia en un software de cálculo numérico.
+ 
+\begin{verbatim}
+a=0;      % limite inferior de integración
+b=1;      % limite superior de integración
+f=@(x)(1./(1+x.^2));      % define la funcion a integrar
+
+xt=a:0.01:b;        % define un vector para graficar
+yt=f(xt);
+plot(xt,yt,'Linewidth',2)     % grafica la funcion definida
+
+P1=f(a)+(f(b)-f(a))/(b-a).*(xt-a); 
+hold on 
+plot(xt,P1,'r')     % aproximación mediante un trapecio
+
+Itrap=(f(b)+f(a))/2*(b-a) % calcula el valor de la integral
+
+h=(b-a)/2;          % aproximación con un polinomio de orden 2 
+x2=[a (b+a)/2 b];
+y2=f(x2);
+plot(x2,y2,'o')
+
+P2= f(a)+(f(a+h)-f(a))/h.*(xt-a)+ (f(b)-2*f(a+h) +f(a))/2/h.^2.*(xt-a).*(xt-a-h); 
+plot(xt,P2,'g')
+
+Isimp=h/3*(f(b)+4*f(a+h)+f(a)) % Calcula el valor de la integral 
+\end{verbatim} 
+ 
+\item[d)] Aproximar su valor empleando la regla trapezoidal compuesta utilizando un paso $h=0,1$.
+\item[e)] Aproximar su valor empleando la regla de Simpson compuesta utilizando un paso $h=0,1$. Comparar con el inciso anterior.
+
+\item[f)] Obtener el valor exacto de cada integral y calcular el valor del error porcentual de cada resultado obtenido.
+
+\item[g)] Realice un gráfico esquemático comparando las reglas simple y compuesta de cada método de calculo. Prediga como evoluciona el valor de la integral al aumentar el paso $h$.
+
+\end{itemize} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ej Aplicar la reglas del rect\'angulo, trapecio compuesta y Simpson compuesta a la integraci\'on de $\sqrt{x}$ entre los
+argumentos 1,00 y 1,30, utilizando la siguiente tabla:
+
+
+\begin{table}[H]
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+ \hline
+$x_i$ & 1,00 & 1,05 & 1,10 & 1,15 & 1,20 & 1,25 & 1,30 \\ 
+\hline
+$f(x_i)$ & 1,00000 & 1,02470 & 1,04881  & 1,07238 &  1,09544 & 1,11803 & 1,14017 \\
+\hline
+\end{tabular} 
+\centering
+\end{table}
+
+\noindent Comparar los resulados de los distintos m\'etodos con el valor analítico de la integral.
+% Acotar el error de discretizaci\'on. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ej Sabiendo que la integral de $\int_{0}^{\pi} sen(x) dx$ = 2, determine c\'ual es la menor cantidad de puntos necesarios considerar en la integraci\'on n\'umerica por las regla de trapecios y Simpson compuestas, respectivamente, para garantizar un error absoluto menor a 0,00002. Para ello, utilice la expresión del error de cada método. ?`A qu\'e se debe la diferencia en los resultados obtenidos? Escriba tanto la cantidad de puntos determinados como el error absoluto obtenido en cada caso.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ej Calcular la integral de los siguientes datos tabulados empleando el método de trapecios y Simpson.   
+
+\begin{table}[H]
+
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline 
+Puntos & 0 & 1 & 2 & 3 & 4 & 5 \\ 
+\hline 
+ $x$ & 0 & 0,1 & 0,2 & 0,3 & 0,4 & 0,5 \\ 
+\hline 
+ $f(x)$ & 1 & 7 & 4 & 3 & 5 & 2 \\ 
+\hline 
+\end{tabular} 
+\centering
+\end{table}
+
+¿Es posible emplear las fórmulas de cuadraturas Gaussianas para el calculo de la integral con los datos suministrados?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Calcular por la f\'ormula de los trapecios, con $h=0.25$ y $h=0.125$
+%$$
+%\int_0^3  \frac{1}{1+x^3}
+%$$
+%Con las soluciones calculadas ¿es posible obtener una mejor aproximación del valor de la integral?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ej Sabiendo que:
+$$
+ln(x)=\int_1^x \frac1{t} \,dt
+$$
+aproximar $ln(x)$ para x=1,1 con h=0,1 empleando la f\'ormula trapezoidal. Acotar el error y comparar con el error real cometido.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Calcular el área de forma exacta de las regiones limitadas por las siguientes funciones empleando el método numérico óptimo.  
+%\begin{multicols}{2}
+%
+% $$ A= \begin{cases} y=x+1 \\ y=0 \\ x=0 \\ x=2 \end{cases} $$
+%
+% $$B=\begin{cases} y= x^2+1 \\ y= 0 \\ x=1 \\ x= 2 \end{cases}$$
+%\end{multicols}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ej Evalúe las siguientes integrales, utilizando las fórmulas de cuadratura de Gauss-Legendre. Con dos, tres y cuatro puntos. (Obtener los pesos y raíces de una tabla normalizada)
+
+\begin{itemize}
+\begin{multicols}{2}
+\item[a)]$\displaystyle \int_0^3 \frac{e^{x}sen(x)}{1+x^2} \, dx$
+
+\item[b)]$\displaystyle \int_0^1 \frac{sen(x)}{x} \,dx$
+
+\item[c)]$\displaystyle \int_{-1}^1 \frac{arctg(x)}{1+x} \,dx$ 
+
+\item[d)]$\displaystyle \int_0^1 \frac{ln(1+x)}{1+x^2} \,dx$
+\end{multicols}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Hallar num\'ericamente el volumen del s\'olido de revoluci\'on, obtenido
+%cuando la curva $y=x e^{-x} cos(x)$ gira alrededor del eje $(0x)$ entre
+%$x=0$ \ y \ $x=\pi$.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Dada la secci\'on transversal del canal de la figura y los valores del
+%ancho $W$ medidos para distintas profundidades $h$, calcular el \'area de la
+%misma aplicando: a) Regla del Trapecio. b) F\'ormula de Simpson.
+%
+%
+%\begin{minipage}{0.25 \textwidth}
+%\begin{table}[H]
+%\begin{tabular}{c|c}
+%h [m] & W [m] \\ 
+%\hline 
+%0 & 0 \\ 
+%\hline 
+%1 & 2 \\ 
+%\hline 
+%2 & 3 \\ 
+%\hline 
+%3 & 6 \\ 
+%\end{tabular} 
+%\centering
+%\end{table}
+%\end{minipage}
+%\hfill \begin{minipage}{0.75 \textwidth}
+%\begin{figure}[H]
+%\includegraphics[scale=2]{canal.pdf}
+%\centering
+%\end{figure}
+%
+%\end{minipage}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Calcular empleando un software de cálculo numérico la siguiente integral
+%$$ I= \int_{-2}^2 e^{\frac{-x^2}{2}} \,dx $$
+%cuyo valor exacto es $I=2.3925$. Resolver por regla trapezoidal, de Simpson y
+%de cuadratura de Gauss con $h=1.0$, $h=0.5$ y $h=0.25$. Realizar un cuadro
+%comparativo con los resultados obtenidos.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej ¿Qué diferencias puede mencionar entre los métodos de integración de Newton-Cotes y Gauss?
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej La velocidad hacia arriba de un cohete se puede calcular con la siguiente fórmula:
+%
+%$$v= u \cdot ln \left( \frac{M_0}{M_0 - q \, t}\right) -g \, t $$
+%donde: 
+%
+% $u :$ velocidad a la cual se expulsa el combustible relativa al cohete.
+%
+% $M_0 :$ masa inicial del cohete.
+% 
+% $q :$ razón de consumo de combustible.
+% 
+% $g:$ aceleración debido a la gravedad. Se supone constante.
+% 
+%\noindent Si $u = 2000 \; m/s$ , $M_0 = 150000 \; kg$ y $q=2600 \; kg/s$ calcule la altura del cohete luego de 30 segundos.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ej Indique si cada proposición es verdadera o falsa. Justifique la respuesta.
+%
+%\begin{itemize}
+%
+%\item[a)] El método de integración del trapecio integra exactamente un polinomio que tiene a lo sumo orden uno.
+%\item[b)] El método de Simpson integra exactamente un polinomio que tiene a lo sumo orden dos.
+%\item[c)] El error de integrar mediante la fórmula de Simpson utilizando un número par de subintervalos es aproximadamente el doble al error de integrar con un número impar de subintervalos.
+%\item[d)] Para integrar una función en un intervalo [a, b] es necesario conocer los valores de f(a) y f(b) por lo menos, independientemente del método de integración utilizado. Sin embargo esta condición no es suficiente
+%
+%\end{itemize}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
