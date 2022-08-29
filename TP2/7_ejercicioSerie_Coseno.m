@@ -25,4 +25,4 @@ fprintf('terminos: %d, aproximacion: %e \n', n, cos_s(end))
 
 for j = 1:n; 
   fprintf('termino: %d, aprox: %e, error: %e \n', j, cos_s(j), error_rel(j))
-endfor
+end
